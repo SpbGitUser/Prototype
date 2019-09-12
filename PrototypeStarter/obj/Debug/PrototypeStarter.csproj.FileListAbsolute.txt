@@ -1,8 +1,0 @@
-D:\WORK\PROTOTYPE\Prototype\PrototypeStarter\bin\Debug\PrototypeStarter.exe.config
-D:\WORK\PROTOTYPE\PrototypeStarter\bin\Debug\PrototypeStarter.exe.config
-D:\WORK\PROTOTYPE\PrototypeStarter\bin\Debug\PrototypeStarter.exe
-D:\WORK\PROTOTYPE\PrototypeStarter\bin\Debug\PrototypeStarter.pdb
-D:\WORK\PROTOTYPE\PrototypeStarter\obj\Debug\PrototypeStarter.Properties.Resources.resources
-D:\WORK\PROTOTYPE\PrototypeStarter\obj\Debug\PrototypeStarter.csproj.GenerateResource.Cache
-D:\WORK\PROTOTYPE\PrototypeStarter\obj\Debug\PrototypeStarter.exe
-D:\WORK\PROTOTYPE\PrototypeStarter\obj\Debug\PrototypeStarter.pdb
