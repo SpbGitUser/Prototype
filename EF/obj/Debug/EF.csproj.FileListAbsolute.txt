@@ -1,0 +1,14 @@
+D:\WORK\PROTOTYPE\EF\bin\Debug\EF.dll.config
+D:\WORK\PROTOTYPE\EF\bin\Debug\EF.dll
+D:\WORK\PROTOTYPE\EF\bin\Debug\EF.pdb
+D:\WORK\PROTOTYPE\EF\bin\Debug\EntityFramework.dll
+D:\WORK\PROTOTYPE\EF\bin\Debug\EntityFramework.SqlServer.dll
+D:\WORK\PROTOTYPE\EF\bin\Debug\System.Data.SQLite.dll
+D:\WORK\PROTOTYPE\EF\bin\Debug\System.Data.SQLite.EF6.dll
+D:\WORK\PROTOTYPE\EF\bin\Debug\System.Data.SQLite.Linq.dll
+D:\WORK\PROTOTYPE\EF\bin\Debug\EntityFramework.xml
+D:\WORK\PROTOTYPE\EF\bin\Debug\EntityFramework.SqlServer.xml
+D:\WORK\PROTOTYPE\EF\bin\Debug\System.Data.SQLite.xml
+D:\WORK\PROTOTYPE\EF\obj\Debug\EF.csprojResolveAssemblyReference.cache
+D:\WORK\PROTOTYPE\EF\obj\Debug\EF.dll
+D:\WORK\PROTOTYPE\EF\obj\Debug\EF.pdb
