@@ -1,33 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-
-using System.Text;
-using System.Threading.Tasks;
+using static ConsoleApp.Classes;
+using static ConsoleApp.Enums;
 
 namespace ConsoleApp
 {
     public class Program
     {
 
-        private enum En
-        {
-            First = 15,
-            Second,
-            Third = 54
-        }
 
         static void Main(string[] args)
         {
-            EmptyString();
+            //EmptyString();
             //Test1();
             //test2();
-
+            StaticMember();
 
             Console.ReadLine();
             
         }
 
         //----------------_T_E_S_T_I_N_G_-------------------
+
+
+        private static void StaticMember()
+        {
+            var a = new WithStaticMemeber();
+            a.Name = "One";
+            WithStaticMemeber.Age = 25;
+             var b = new WithStaticMemeber();
+            b.Name = "Two";
+
+            Console.WriteLine(WithStaticMemeber.Age);
+        }
 
         private static void test2()
         {
