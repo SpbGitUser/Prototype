@@ -11,9 +11,10 @@ namespace ConsoleApp
         static void Main(string[] args)
         {
             //EmptyString();
-            //Test1();
-            //test2();
-            StaticMember();
+            //StringNullTest1();
+            //ArreyTest1();
+            //StaticMember();
+            OperatorOverridingTest();
 
             Console.ReadLine();
             
@@ -21,6 +22,15 @@ namespace ConsoleApp
 
         //----------------_T_E_S_T_I_N_G_-------------------
 
+
+        private static void OperatorOverridingTest()
+        {
+            var a = new Counter() {Value = 2};
+            var b = new Counter() {Value = 5};
+            var c = a + b;
+
+            Console.WriteLine(c.Value);
+        }
 
         private static void StaticMember()
         {
@@ -33,7 +43,7 @@ namespace ConsoleApp
             Console.WriteLine(WithStaticMemeber.Age);
         }
 
-        private static void test2()
+        private static void ArreyTest1()
         {
             var array = new int[] { 1, 2 };
             try
@@ -54,7 +64,7 @@ namespace ConsoleApp
             }
         }
 
-        private static void Test1()
+        private static void StringNullTest1()
         {
             Console.WriteLine((int)En.Second);
         }
