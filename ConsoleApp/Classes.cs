@@ -1,9 +1,139 @@
 ﻿using System;
+using System.Collections.Generic;
+using static ConsoleApp.Interfaces;
 
 namespace ConsoleApp
 {
     public class Classes
     {
+
+        #region Ковариантность
+
+        internal class Account
+        {
+            public virtual void DoTransfer(int sum)
+            {
+                Console.WriteLine($"Клиент положил на счет {sum} долларов");
+            }
+        }
+        internal class DepositAccount : Account
+        {
+            public override void DoTransfer(int sum)
+            {
+                Console.WriteLine($"Клиент положил на депозитный счет {sum} долларов");
+            }
+        }
+
+        internal class Bank<T> : IBank<T> where T : Account, new()
+        {
+            public T CreateAccount(int sum)
+            {
+                T acc = new T();  // создаем счет
+                acc.DoTransfer(sum);
+                return acc;
+            }
+        }
+
+        #endregion Ковариантность
+
+
+        #region Контрвариантность
+
+
+        #endregion Контрвариантность
+
+
+        #region Comparer / Сравнение
+
+        internal class PunkComparer:IComparer<Punk>
+        {
+            public int Compare(Punk r1, Punk r2)
+            {
+                return r2?.Name.Length - r1?.Name.Length ?? 0;
+            }
+        }
+
+        #endregion Comparer / Сравнение
+
+
+        #region Interfaces / Интерфейсы
+
+        internal class GenericSample<T> : IGenericIfs<string>
+        {
+            public string Value { get; set; }
+
+            public T ClassValue { get; set; }
+        }
+
+        internal class Goer : IRunner, IStepper
+        {
+            void IRunner.Run()
+            {
+                Console.WriteLine("Fast run :)");
+            }
+            void IStepper.Run()
+            {
+                Console.WriteLine("Stepping may be faster ;)");
+            }
+        }
+
+        internal abstract class Dancer : IMoveable, ISingable, ICloneable, IComparable<Dancer>
+        {
+            public abstract void Move();
+
+            public abstract void Sing();
+
+            public abstract object Clone();
+
+            public string Name { get; set; }
+
+            public int CompareTo(Dancer o)
+            {
+                return Name.Length - ((Dancer) o).Name.Length;
+            }
+        }
+
+        internal class Punk : Dancer
+        {
+            public override void Move()
+            {
+                Console.WriteLine("Dance Pogo!");
+            }
+
+            public override void Sing()
+            {
+                Console.WriteLine("Hoy!");
+            }
+
+            public override object Clone()
+            {
+                return new Punk() {Name = "PUNK ASS - " + this.Name};
+            } 
+        }
+
+        internal class Raper : Dancer
+        {
+            public override void Move()
+            {
+                Console.WriteLine("Brake dance!");
+            }
+
+            public override void Sing()
+            {
+                Console.WriteLine("Yo!");
+            }
+
+            public Punk Friend { get; set; }
+
+            public override object Clone()
+            {
+                //return new Punk() { Name = "DANCER - " + this.Name };
+                return this.MemberwiseClone();
+            }
+        }
+        
+        #endregion Interfaces / Интерфейсы
+
 
         #region Exceptions / Исключения
 

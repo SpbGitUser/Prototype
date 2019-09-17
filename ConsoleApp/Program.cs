@@ -1,6 +1,7 @@
 ﻿using System;
 using static ConsoleApp.Classes;
 using static ConsoleApp.Enums;
+using static ConsoleApp.Interfaces;
 
 namespace ConsoleApp
 {
@@ -31,7 +32,12 @@ namespace ConsoleApp
                 //GenricsTest();
                 //TryCatchTest();
                 //TryCatchTest1();
-                TryCatchTest2();
+                //TryCatchTest2();
+                //InterfacesTest();
+                //InterfacesTest1();
+                //InterfacesTest2();
+                //InterfacesTest3();
+                InterfacesTest4();
             }
             catch (Exception e)
             {
@@ -43,8 +49,97 @@ namespace ConsoleApp
             Console.ReadKey();
         }
 
-        //----------------_T_E_S_T_I_N_G_-------------------
+        //XXXXXXXXXXXXXXXX_T_E_S_T_I_N_G_XXXXXXXXXXXXXXXXXXX
+
         //Console.WriteLine("------------------");
+
+        private static void InterfacesTest4()
+        {
+            //var numbers = new [] { "97", "45", "32", "65", "83", "23", "15" };
+
+            var numbers = new[]
+            {
+                new Punk() {Name = "John"},
+                new Punk() {Name = "Bob"},
+                new Punk() {Name = "AF"},
+                new Punk() {Name = "TOPOR"},
+                new Punk() {Name = "Sandenick"},
+                new Punk() {Name = "PRETTY_BOY"},
+                new Punk() {Name = "CS"},
+                new Punk() {Name = "-"},
+                new Punk() {Name = "HH"},
+                new Punk() {Name = "GUFF"},
+            };
+            //var numbers = new int[] { 97, 45, 32, 65, 83, 23, 15 };
+            Array.Sort(numbers, new PunkComparer());
+            foreach (var n in numbers)
+            {
+                Console.WriteLine(n.Name);
+            }
+            //Console.WriteLine("------------------");
+            Array.Sort(numbers);
+            foreach (var n in numbers)
+            {
+                Console.WriteLine(n.Name);
+            }
+        }
+
+        private static void InterfacesTest3()
+        {
+            //var numbers = new [] { "97", "45", "32", "65", "83", "23", "15" };
+
+            var numbers = new[]
+            {
+                new Raper() {Name = "John"},
+                new Raper() {Name = "Bob"},
+                new Raper() {Name = "AF"},
+                new Raper() {Name = "TOPOR"},
+                new Raper() {Name = "Sandenick"},
+                new Raper() {Name = "PRETTY_BOY"},
+                new Raper() {Name = "CS"},
+                new Raper() {Name = "-"},
+                new Raper() {Name = "HH"},
+                new Raper() {Name = "GUFF"},
+            };
+            //var numbers = new int[] { 97, 45, 32, 65, 83, 23, 15 };
+            Array.Sort(numbers);
+            foreach (var n in numbers)
+            {
+                Console.WriteLine(n.Name);
+            }
+        }
+
+        private static void InterfacesTest2()
+        {
+            var p = new Punk() { Name = "Sid"};
+            var c = (Punk)p.Clone();
+            c.Name = "ChaCha";
+            Console.WriteLine(c.Name);
+            Console.WriteLine("------------------");
+            var d = new Raper() {Name = "Fred"};
+            d.Friend = c;
+            var r =(Raper) d.Clone();
+            Console.WriteLine(r.Friend.Name);
+
+        }
+
+        private static void InterfacesTest1()
+        {
+            var g = new Goer();
+            ((IRunner) g).Run();
+            ((IStepper) g).Run();
+        }
+
+        private static void InterfacesTest()
+        {
+            IMoveable p = new Punk();
+            ISingable r = new Raper();
+            //p.Move();
+            //r.Sing();
+            Dancer c = (Dancer) p;
+            c.Move();
+            c.Sing();
+        }
 
         private static void TryCatchTest2()
         {
