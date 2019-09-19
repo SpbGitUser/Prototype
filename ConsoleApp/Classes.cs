@@ -8,9 +8,36 @@ namespace ConsoleApp
     {
         #region Event's
 
+        internal class MyEventArgs
+        {
+            public MyEventArgs(string m, int v)
+            {
+                Msg = m;
+                Val = v;
+            }
+
+            public string Msg { get; set; }
+
+            public int Val { get; set; }
+        }
+
         internal class EventTester
         {
-            public delegate void Eve(string smthngHappenns);
+            public delegate void EventDelegate(object sender, MyEventArgs args);
+
+            public event EventDelegate OnMyEventIn;
+
+            public event EventDelegate OnMyEventOut;
+
+            public int Age { get; set; } = 18;
+
+            private int _sum;
+
+            public void MakeIt()
+            {
+                OnMyEventIn(this, new MyEventArgs("Tom", 16));
+                OnMyEventOut(this, new MyEventArgs("Jack", 21));
+            }
         }
 
         #endregion Event's

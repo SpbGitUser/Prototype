@@ -42,7 +42,8 @@ namespace ConsoleApp
                 //InternirovanieStrok();
                 //KovariantnostTest();
                 //KontrvariantnostTest();
-                DelegateTest();
+                //DelegateTest();
+                EventTest();
             }
             catch (Exception e)
             {
@@ -59,6 +60,34 @@ namespace ConsoleApp
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
         //Console.WriteLine("------------------");
+
+
+        private static void EventTest()
+        {
+            var a = new EventTester();
+            a.OnMyEventIn += EventAction;
+            a.OnMyEventOut += EventAction;
+
+            a.MakeIt();
+        }
+
+        private static void EventAction(object sender, MyEventArgs args)
+        {
+            var s = sender as EventTester;
+            if (s != null && args != null)
+            {
+                if (s.Age < args.Val)
+                {
+                    Console.WriteLine(args.Msg + " NOT a real man");
+                }
+                else
+                {
+                    Console.WriteLine(args.Msg + " acn drink BEER");
+                }
+            }
+
+            //Console.WriteLine($"I'm CALL -> {txt}");
+        }
 
 
         private static void DelegateTest()
