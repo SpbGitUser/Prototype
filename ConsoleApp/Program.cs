@@ -37,7 +37,12 @@ namespace ConsoleApp
                 //InterfacesTest1();
                 //InterfacesTest2();
                 //InterfacesTest3();
-                InterfacesTest4();
+                //InterfacesTest4();
+                //StringSpecificTest();
+                //InternirovanieStrok();
+                //KovariantnostTest();
+                //KontrvariantnostTest();
+                DelegateTest();
             }
             catch (Exception e)
             {
@@ -49,9 +54,140 @@ namespace ConsoleApp
             Console.ReadKey();
         }
 
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         //XXXXXXXXXXXXXXXX_T_E_S_T_I_N_G_XXXXXXXXXXXXXXXXXXX
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
         //Console.WriteLine("------------------");
+
+
+        private static void DelegateTest()
+        {
+            DelegateInside.Check();
+            Console.WriteLine("------------------");
+            DelegateInside.Check2();
+            Console.WriteLine("------------------");
+            DelegateInside.Check3();
+            Console.WriteLine("------------------");
+            DelegateInside.SaySmthhng ssm = DelegateInside.SayerMethod2;
+            DelegateInside.Check4(ssm);
+        }
+
+        /// <summary>
+        /// Контравариантность: позволяет использовать более универсальный тип, чем заданный изначально
+        /// </summary>
+        private static void KontrvariantnostTest()
+        {
+            ///[!!!] ниверсальный параметр контрвариантного типа может применяться 
+            /// только к аргументам метода,  но не может применяться к аргументам,
+            ///  используемым в качестве возвращаемых типов
+
+            ITransaction<Account> accTransaction = new Transaction<Account>();
+            accTransaction.DoOperation(new Account(), 400);
+
+            ITransaction<DepositAccount> depAccTransaction = new Transaction<Account>();
+            depAccTransaction.DoOperation(new DepositAccount(), 450);
+
+        }
+
+        /// <summary>
+        /// Ковариантность: позволяет использовать более конкретный тип, чем заданный изначально
+        /// </summary>
+        private static void KovariantnostTest()
+        {
+            ///[!!!] универсальный параметр может использоваться только в качестве типа значения, 
+            ///возвращаемого методами интерфейса.Но не может использоваться в качестве типа
+            ////аргументов метода или ограничения методов интерфейса.
+
+            IBank<DepositAccount> depositBank = new Bank<DepositAccount>();
+            Account acc1 = depositBank.CreateAccount(34);
+
+            IBank<Account> ordinaryBank = new Bank<DepositAccount>();
+            // или так
+            // IBank<Account> ordinaryBank = depositBank;
+            Account acc2 = ordinaryBank.CreateAccount(45);
+        }
+
+
+        private static void InternirovanieStrok()
+        {
+            //Интернирование строки это способ обойти эту проблему.
+            //Среда CLR поддерживает таблицу называемую пул интернирования.
+            //Эта таблица содержит одну уникальную ссылку на каждую строку, 
+            //которая либо объявлена, либо создана программно во время выполнения
+            
+            Console.WriteLine("1 ----------------");
+            string a = "hello world";
+            string b = a;
+            a = "hello";
+            Console.WriteLine("{0}, {1}", a, b);
+            Console.WriteLine(a == b);
+            Console.WriteLine(object.ReferenceEquals(a, b));
+            Console.WriteLine("2 ----------------");
+            Console.WriteLine((a + " world") == b);
+            Console.WriteLine(object.ReferenceEquals((a + " world"), b));
+            Console.WriteLine("3 ----------------");
+            string hello = "hello";
+            string helloWorld = "hello world";
+            string helloWorld2 = hello + " world";
+
+            Console.WriteLine("{0}, {1}: {2}, {3}", helloWorld, helloWorld2,
+                helloWorld == helloWorld2,
+                object.ReferenceEquals(helloWorld, helloWorld2));
+            Console.WriteLine("4 ----------------");
+            helloWorld2 = "hello world";
+            Console.WriteLine("{0}, {1}: {2}, {3}", helloWorld, helloWorld2,
+                helloWorld == helloWorld2,
+                object.ReferenceEquals(helloWorld, helloWorld2));
+            Console.WriteLine("5 ----------------");
+            Console.WriteLine(object.ReferenceEquals(
+                String.Intern(helloWorld),
+                String.Intern(helloWorld2))); ;
+            Console.WriteLine("6 ----------------");
+            string a1 = new string(new char[] { 'a', 'b', 'c' });
+            object o = String.Copy(a1);
+            Console.WriteLine(object.ReferenceEquals(o, a1));
+            String.Intern(o.ToString());
+            Console.WriteLine(object.ReferenceEquals(o, String.Intern(a1)));
+            Console.WriteLine("7 ----------------");
+            object o2 = String.Copy(a1);
+            String.Intern(o2.ToString());
+            Console.WriteLine(object.ReferenceEquals(o2, String.Intern(a1)));
+            Console.WriteLine("8 ----------------");
+            string s = new string(new char[] { 'x', 'y', 'z' });
+            Console.WriteLine(String.IsInterned(s) ?? "not interned");
+            String.Intern(s);
+            Console.WriteLine(String.IsInterned(s) ?? "not interned");
+            Console.WriteLine(object.ReferenceEquals(
+                String.IsInterned(new string(new char[] { 'x', 'y', 'z' })), s));
+            Console.WriteLine("9 ----------------");
+            //[!!!] >>> код содержит литерал «xyz». А когда вы добавляете литерал в вашу программу, 
+            //CLR автоматически добавляет его в пул интернирования ещё до начала выполнения программы.
+            //Комментируете эту строку, вы убираете литерал из программы и пул интернирования уже 
+            //не будет содержать строку «xyz».
+            //Console.WriteLine(object.ReferenceEquals("xyz", s));
+            //Console.WriteLine(object.ReferenceEquals("x" + "y" + "z", s));
+            Console.WriteLine(object.ReferenceEquals(String.Format("{0}{1}{2}", 'x', 'y', 'z'), s));
+        }
+
+        private static int a12 = 5;
+        private static int b454345 = a12;
+        static void StringSpecificTest()
+        {
+            //Структуры данных можно разделить на два вида — эфемерные и персистентные.
+
+            //ЭФИМЕРНЫЕ / ПЕРСИСТЕНТНЫЕ
+            //Эфемерными называют структуры данных, хранящие только последнюю свою версию. 
+            //Персистентными называют структуры, которые сохраняют все свои предыдущие версии при изменении. 
+
+            //Последние фактически неизменяемы, так как их операции не изменяют структуру на месте, 
+            //вместо этого они возвращают новую основанную на предыдущей структуру.
+
+            //Учитывая, что строки неизменны, они могли бы быть и персистентными, 
+            //однако таковыми не являются.В.NET строки являются эфемерными. Подробнее о том, почему это именно так можно прочитать у Эрика Липперта по ссылке
+
+            Console.WriteLine(b454345);
+        }
 
         private static void InterfacesTest4()
         {
@@ -318,8 +454,7 @@ namespace ConsoleApp
             wma.SayMore();
             wma.Say();
         }
-
-
+        
         private static void TypesConvertion()
         {
             var boy = new Boy("BoyName");

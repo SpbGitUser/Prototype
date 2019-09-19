@@ -6,8 +6,111 @@ namespace ConsoleApp
 {
     public class Classes
     {
+        #region Event's
+
+        internal class EventTester
+        {
+            public delegate void Eve(string smthngHappenns);
+        }
+
+        #endregion Event's
+
+
+        #region Делегаты
+
+        internal static class DelegateInside
+        {
+            public delegate void SaySmthhng(string text);
+            delegate int Operation(int x, int y);
+
+            public static void Check()
+            {
+                SaySmthhng saySmthhng;
+                saySmthhng = SayerMethod;
+                saySmthhng("Bu-ga-ga");
+            }
+
+            public static void Check2()
+            {
+                // присваивание адреса метода через контруктор
+                Operation del = Add; // делегат указывает на метод Add
+                int result = del(4, 5); // фактически Add(4, 5)
+                Console.WriteLine(result);
+
+                del = Multiply; // теперь делегат указывает на метод Multiply
+                result = del(4, 5); // фактически Multiply(4, 5)
+                Console.WriteLine(result);
+            }
+
+            public static void Check3()
+            {
+                SaySmthhng saySmthhng;
+                SaySmthhng saySmthhng1;
+
+                saySmthhng = SayerMethod;
+                saySmthhng += SayerMethod2;
+
+                saySmthhng1 = SayerMethod;
+                saySmthhng("GO");
+                
+                saySmthhng -= saySmthhng1;
+                saySmthhng("Ya");
+
+                saySmthhng1.Invoke("INvoke done");
+            }
+
+            public static void Check4(SaySmthhng sms)
+            {
+                sms.Invoke("Bro");
+            }
+
+            private static void SayerMethod(string txt)
+            {
+                Console.WriteLine("1raz - " + txt);
+            }
+
+            internal static void SayerMethod2(string txt)
+            {
+                Console.WriteLine("2raz - " + txt);
+            }
+
+
+            private static int Add(int x, int y)
+            {
+                return x + y;
+            }
+            private static int Multiply(int x, int y)
+            {
+                return x * y;
+            }
+        }
+
+
+        #endregion Делегаты
+
+
+        #region Контрвариантность
+
+        internal interface ITransaction<in T>
+        {
+            void DoOperation(T account, int sum);
+        }
+
+        internal class Transaction<T> : ITransaction<T> where T : Account
+        {
+            public void DoOperation(T account, int sum)
+            {
+                account.DoTransfer(sum);
+            }
+        }
+
+        #endregion
 
         #region Ковариантность
+
+        //Ковариантность: позволяет использовать более конкретный тип, чем заданный изначально
+        //Контравариантность: позволяет использовать более универсальный тип, чем заданный изначально
+        //Инвариантность: позволяет использовать только заданный тип
 
         internal class Account
         {
@@ -22,6 +125,11 @@ namespace ConsoleApp
             {
                 Console.WriteLine($"Клиент положил на депозитный счет {sum} долларов");
             }
+        }
+        
+        internal interface IBank<out T>
+        {
+            T CreateAccount(int sum);
         }
 
         internal class Bank<T> : IBank<T> where T : Account, new()
@@ -201,13 +309,13 @@ namespace ConsoleApp
             }
         }
 
-        internal class Transaction<T> where T : Account<int>
+        internal class Transaction1<T> where T : Account<int>
         {
             public T FromAcc { get; private set; }
 
             public T ToAcc { get; private set; }
 
-            public Transaction(T from, T to)
+            public Transaction1(T from, T to)
             {
                 FromAcc = from;
                 ToAcc = to;
@@ -276,6 +384,7 @@ namespace ConsoleApp
             {
                 //Интерполя́ция, интерполи́рование — в вычислительной математике способ нахождения 
                 //промежуточных значений величины по имеющемуся дискретному набору известных значений.
+
                 Console.WriteLine($"Hi! I'm MAN {_name}.");
             }
         }

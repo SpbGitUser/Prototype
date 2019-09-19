@@ -7,22 +7,6 @@ namespace ConsoleApp
     internal class Interfaces
     {
 
-        #region Ковариантность
-
-        internal interface IBank<out T>
-        {
-            T CreateAccount(int sum);
-        }
-
-
-        #endregion Ковариантность
-
-
-        #region Контрвариантность
-
-
-        #endregion Контрвариантность
-
 
         internal interface IGenericIfs<T>
         {
