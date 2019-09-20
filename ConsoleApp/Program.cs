@@ -8,7 +8,6 @@ namespace ConsoleApp
     public class Program
     {
 
-
         static void Main(string[] args)
         {
             try
@@ -20,6 +19,7 @@ namespace ConsoleApp
                 //OperatorOverridingTest();
                 //Indexator();
                 //Inheritance();
+
                 //TypesConvertion();
                 //TypesConvertion2();
                 //TypesConvertion3();
@@ -27,6 +27,7 @@ namespace ConsoleApp
                 //TypesConvertion5();
                 //TypesConvertion6();
                 //TypesConvertion7();
+
                 //EqualsTest();
                 //EqualsTest1();
                 //GenricsTest();
@@ -43,15 +44,20 @@ namespace ConsoleApp
                 //KovariantnostTest();
                 //KontrvariantnostTest();
                 //DelegateTest();
-                EventTest();
+                //EventTest();
+                //LambdaTEst();
+
+                //KovariantnostDelegata();
+                //KontrvariantnostDelegata()
+                //KovariantnostGenericDelegata();
+                //KontrvariantnostGenericDelegata();
+                DelegateVariants();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 //throw;
             }
-
-
             Console.ReadKey();
         }
 
@@ -61,13 +67,130 @@ namespace ConsoleApp
 
         //Console.WriteLine("------------------");
 
+        private static void ActionSample(string s, int i)
+        {
+            Console.WriteLine($"{s} is {i} years old");
+        }
+        private static bool PredicateSample(int i)
+        {
+            return i >= 18;
+        }
+        private static string FuncSample(string s, int i)
+        {
+            var res = string.Empty;
+            for (int j = 0; j < i; j++)
+            {
+                res += i;
+            }
+            return res;
+        }
 
+        private static void DelegateVariants()
+        {
+            Action<string, int> act = ActionSample;
+            Predicate<int> pre = PredicateSample;
+            Func<string, int, string> funcSMp = FuncSample;
+
+            act("Tom", 18);
+            Console.WriteLine("------------------");
+            Console.WriteLine(pre(17) ? "Old man" : "So yang :)");
+            Console.WriteLine("------------------");
+            Console.WriteLine(funcSMp("7", 3));
+        }
+
+        private static void PersonInfo(Person2 p) => p.Display();
+        delegate void GetInfo<in T>(T item);
+        private static void KontrvariantnostGenericDelegata()
+        {
+            GetInfo<Person2> personInfo = PersonInfo;
+            GetInfo<Client2> clientInfo = personInfo;      // контравариантность - ПАРАМЕТР МОЖЕТ БЫЛЬ ТАКИМЖЕ ИЛИ БОЛЕЕ ОБОБЩЕННЫМ)
+
+            Client2 client = new Client2 { Name = "Tom" };
+            clientInfo(client); // Client: Tom
+        }
+        
+        private static Client2 GetClient(string name)
+        {
+            return new Client2 { Name = name };
+        }
+        delegate T Builder<out T>(string name);
+        private static void KovariantnostGenericDelegata()
+        {
+            Builder<Client2> clientBuilder = GetClient;
+            Builder<Person2> personBuilder1 = clientBuilder;     // ковариантность - ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ ДОЛЖНО БЫТЬ ТАКИМ ЖЕ ИЛИ ТОЧНЕЕ
+
+            Person2 p = personBuilder1("Tom"); // вызов делегата
+            p.Display(); // Client: Tom
+        }
+        
+        delegate void ClientInfo(PersonChild1 client);
+        private static void GetPersonInfo(Person1 p)
+        {
+            Console.WriteLine(p.Name);
+        }
+        private static void KontrvariantnostDelegata()
+        {
+            ClientInfo clientInfo = GetPersonInfo; // контравариантность
+            PersonChild1 client = new PersonChild1 { Name = "Alice" };
+            clientInfo(client);
+            Console.Read();
+        }
+
+        delegate Person1 PersonFactory(string name);
+        private static PersonChild1 BuildClient(string name)
+        {
+            return new PersonChild1 { Name = name };
+        }
+        private static void KovariantnostDelegata()
+        {
+            PersonFactory personDel;
+
+            personDel = BuildClient; // ковариантность
+            Person1 p = personDel("Tom");
+            Console.WriteLine(p.Name);
+        }
+
+        delegate int Operation(int x, int y);
+        delegate int Operation1(int x);
+        delegate int Operation2(ref int x);
+        private static void LambdaTEst()
+        {
+            Operation op1 = (x, y) => x + y;
+            Operation op2 = (x, y) => x * y;
+            Operation op3 = delegate(int a, int b)
+            {
+                return a * b * 2;
+            };
+
+            Operation1 op4 = i => i * 10;
+            Operation2 op5 = (ref int a) => a++;
+
+            Console.WriteLine(op1(1,2));
+            Console.WriteLine(op2(1, 2));
+            Console.WriteLine(op3(1, 2));
+            Console.WriteLine(op4(2));
+            var c1 = 23;
+            op5(ref c1);
+            Console.WriteLine(c1);
+            Console.WriteLine("------------------");
+            var aa = new EventTester();
+            aa.OnLabdaEvent += (i) =>
+            {
+                Console.WriteLine("Your choise is " + i);
+            };
+            aa.MakeIt1();
+            Console.WriteLine("------------------");
+            aa.MakeIt2((c)=> {Console.WriteLine("Another choise is " + c);});
+        }
+        
         private static void EventTest()
         {
             var a = new EventTester();
             a.OnMyEventIn += EventAction;
-            a.OnMyEventOut += EventAction;
-
+            a.OnMyEventOut += delegate(object sndr, MyEventArgs args)
+            {
+                Console.WriteLine("Here " + args.Msg + " can do it in " + (sndr as EventTester).Age);
+            };
             a.MakeIt();
         }
 
@@ -82,10 +205,9 @@ namespace ConsoleApp
                 }
                 else
                 {
-                    Console.WriteLine(args.Msg + " acn drink BEER");
+                    Console.WriteLine(args.Msg + " can drink BEER");
                 }
             }
-
             //Console.WriteLine($"I'm CALL -> {txt}");
         }
 
@@ -140,7 +262,7 @@ namespace ConsoleApp
 
         private static void InternirovanieStrok()
         {
-            //Интернирование строки это способ обойти эту проблему.
+            //Интернирование строки - это способ обойти эту проблему.
             //Среда CLR поддерживает таблицу называемую пул интернирования.
             //Эта таблица содержит одну уникальную ссылку на каждую строку, 
             //которая либо объявлена, либо создана программно во время выполнения
@@ -364,6 +486,10 @@ namespace ConsoleApp
             //{
             //    Console.WriteLine("Simple ex");
             //}
+            catch (Exception e)
+            {
+                Console.WriteLine("ex");
+            }
             finally
             {
                 Console.WriteLine("Блок finally");
@@ -433,9 +559,13 @@ namespace ConsoleApp
 
         private static void TypesConvertion6()
         {
+            ///overrided метод вызывается в момент выполнения и берет тип реально созданного объекта
+            ///hiden - по типу переменной, куда кладется объект
+
             Boy boy = new BigBoy("Sam");
             boy.Say();
             boy.SayMore();
+            boy.SayMoreMore();
         }
 
         private static void TypesConvertion5()
@@ -472,14 +602,14 @@ namespace ConsoleApp
 
         private static void TypesConvertion2()
         {
-            var boy2 = new Women("Tom");
-            Boy boy = (Boy) boy2;
-            Boy boy1 = boy2;
+            var wm = new Women("Tom");
+            Boy boy = (Boy)wm;
+            Boy boy1 = (Boy)wm;     // explicit (явное) приведение типоов
             boy.SayMore();
             boy1.SayMore();
             Console.WriteLine("------------------");
             var str = "Jane";
-            Women wma = str;
+            Women wma = str;    // implicit (неявное) приведение типоов
             wma.SayMore();
             wma.Say();
         }

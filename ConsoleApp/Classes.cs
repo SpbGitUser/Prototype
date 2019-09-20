@@ -6,7 +6,30 @@ namespace ConsoleApp
 {
     public class Classes
     {
-        #region Event's
+        #region Ковариантность и контравариантность делегатов
+
+        internal class Person1
+        {
+            public string Name { get; set; }
+        }
+        internal class PersonChild1 : Person1 { }
+
+        // VVV В обощенных делегатах
+
+        internal class Person2
+        {
+            public string Name { get; set; }
+            public virtual void Display() => Console.WriteLine($"Person {Name}");
+        }
+        internal class Client2 : Person2
+        {
+            public override void Display() => Console.WriteLine($"Client {Name}");
+        }
+
+        #endregion Ковариантность и контравариантность делегатов
+
+
+        #region Event'ы и лямбда-делегаты
 
         internal class MyEventArgs
         {
@@ -25,9 +48,13 @@ namespace ConsoleApp
         {
             public delegate void EventDelegate(object sender, MyEventArgs args);
 
+            public delegate void Operation4(int x);
+
             public event EventDelegate OnMyEventIn;
 
             public event EventDelegate OnMyEventOut;
+
+            public event Operation4 OnLabdaEvent;
 
             public int Age { get; set; } = 18;
 
@@ -37,6 +64,16 @@ namespace ConsoleApp
             {
                 OnMyEventIn(this, new MyEventArgs("Tom", 16));
                 OnMyEventOut(this, new MyEventArgs("Jack", 21));
+            }
+
+            public void MakeIt1()
+            {
+                OnLabdaEvent(12);
+            }
+
+            public void MakeIt2(Operation4 lmb)
+            {
+                lmb(77);
             }
         }
 
@@ -132,6 +169,7 @@ namespace ConsoleApp
         }
 
         #endregion
+
 
         #region Ковариантность
 
@@ -358,7 +396,7 @@ namespace ConsoleApp
         {
             public Mikron()
             {
-                Console.WriteLine("Mikron creaqted!");
+                //SConsole.WriteLine("Mikron creaqted!");
             }
         }
 
@@ -426,6 +464,11 @@ namespace ConsoleApp
                 //Console.WriteLine("Boy's Band");
             }
 
+            public virtual void SayMoreMore()
+            {
+                Console.WriteLine($"MoreMore - Boy's name is {Name}!");
+            }
+
             public void SayMore()
             {
                 Console.WriteLine($"Boy's name is {Name}!");
@@ -458,6 +501,13 @@ namespace ConsoleApp
                     _name = value;
                 }
             }
+
+
+            public override void SayMoreMore()
+            {
+                Console.WriteLine($"MoreMore - BIG boy's name is {Name}!");
+            }
+
 
             public new void SayMore()
             {
@@ -496,7 +546,7 @@ namespace ConsoleApp
                 Console.WriteLine($"Women's name is {Name}!");
             }
 
-            public static implicit operator Boy(Women param)
+            public static explicit operator Boy(Women param)
             {
                 var boy = new Boy(param.Name);
                 return boy;
