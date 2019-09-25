@@ -19,7 +19,7 @@ namespace ConsoleApp
                 //OperatorOverridingTest();
                 //Indexator();
                 //Inheritance();
-
+                //-----------------------------------
                 //TypesConvertion();
                 //TypesConvertion2();
                 //TypesConvertion3();
@@ -27,7 +27,7 @@ namespace ConsoleApp
                 //TypesConvertion5();
                 //TypesConvertion6();
                 //TypesConvertion7();
-
+                //-----------------------------------
                 //EqualsTest();
                 //EqualsTest1();
                 //GenricsTest();
@@ -46,12 +46,18 @@ namespace ConsoleApp
                 //DelegateTest();
                 //EventTest();
                 //LambdaTEst();
-
+                //-----------------------------------
                 //KovariantnostDelegata();
-                //KontrvariantnostDelegata()
+                //KontrvariantnostDelegata();
                 //KovariantnostGenericDelegata();
                 //KontrvariantnostGenericDelegata();
-                DelegateVariants();
+                //DelegateVariants();
+                //-----------------------------------
+                //ExtensionsTest();
+                //PartialTest();
+                //AnonimusType();
+                //PatternMatching();
+                IntTest();
             }
             catch (Exception e)
             {
@@ -66,6 +72,171 @@ namespace ConsoleApp
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
         //Console.WriteLine("------------------");
+
+        // > C# 8.0 позволяет сократить конструкцию switch, которая возвращает значение:
+        //static int Select3(int op, int a, int b) => op switch
+        //{
+        //    1 => a + b,
+        //    2 => a - b,
+        //    3 => a* b,
+        //        _ => throw new ArgumentException("Недопустимый код операции")
+        //};
+
+
+        //. В версии C# 7.0 (Visual Studio 2017) 
+        //private static void RefTest()
+        //{
+        //    int x = 5;
+        //    ref int xRef = ref x;
+        //    Console.WriteLine(x); // 5
+        //    xRef = 125;
+        //    Console.WriteLine(x); // 125
+        //    x = 625;
+        //    Console.WriteLine(xRef); // 625
+        //}
+
+        private static void IntTest()
+        {
+            var a = uint.MaxValue;
+            var b = int.MaxValue;
+            Console.WriteLine(a);
+            Console.WriteLine(b);
+            b = 0;
+            Console.WriteLine(b);
+            b = (int)a;
+            Console.WriteLine(b);
+        }
+
+         private static void PatternMatching()
+        {
+            var emp = new Employee3();
+            //var emp = new Manager3();
+            UseEmployee1(emp);
+            UseEmployee2(emp);
+            UseEmployee3(emp);
+        }
+
+        private static void UseEmployee1(Employee3 emp)
+        {
+            Manager3 manager = emp as Manager3;
+            if (manager != null && manager.IsOnVacation == false)
+            {
+                manager.Work();
+            }
+            else
+            {
+                Console.WriteLine("Преобразование прошло неудачно");
+            }
+        }
+        private static void UseEmployee2(Employee3 emp)
+        {
+            try
+            {
+                Manager3 manager = (Manager3)emp;
+                if (!manager.IsOnVacation)
+                    manager.Work();
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private static void UseEmployee3(Employee3 emp)
+        {
+            if (emp is Manager3)
+            {
+                Manager3 manager = (Manager3)emp;
+                if (!manager.IsOnVacation)
+                    manager.Work();
+            }
+            else
+            {
+                Console.WriteLine("Преобразование не допустимо");
+            }
+        }
+        //pattern matching
+        //static void UseEmployee(Employee3 emp)
+        //{
+        //    if (emp is Manager3 manager && manager.IsOnVacation == false)
+        //    {
+        //        manager.Work();
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("Преобразование не допустимо");
+        //    }
+        //}
+        //static void UseEmployee(Employee3 emp)
+        //{
+        //    switch (emp)
+        //    {
+        //        case Manager3 manager:
+        //            manager.Work();
+        //            break;
+        //        case null:
+        //            Console.WriteLine("Объект не задан");
+        //            break;
+        //        default:
+        //            Console.WriteLine("Объект не менеджер");
+        //            break;
+        //    }
+        //}
+
+        //Локальные функции доступны начиная с версии C# 7.0 
+        private static void LocalFuncs()
+        {
+            //int limit = 0;
+
+                // локальная функция
+                //bool IsMoreThan(int number)
+                //{
+                //    return number > limit;
+                //}
+
+            //int result = 0;
+            //for (int i = 0; i < numbers.Length; i++)
+            //{
+            //    if (IsMoreThan(numbers[i]))
+            //    {
+            //        result += numbers[i];
+            //    }
+            //}
+        }
+
+        private static void AnonimusType()
+        {
+            var user = new { Name = "Tom", Age = 34 };
+            var student = new { Name = "Alice", Age = 21 };
+            var manager = new { Name = "Bob", Age = 26, Company = "Microsoft" };
+
+            //диентификаторы, имена которых будут использоваться как названия свойств
+            var name1 = "Ted";
+            var manager1 = new { Name = "Bob", Age = 26, name1 };
+            
+            // свойства анонимных типов доступны только для чтения
+            Console.WriteLine(user.GetType().Name); // <>f__AnonymousType0'2
+            Console.WriteLine(student.GetType().Name); // <>f__AnonymousType0'2
+            Console.WriteLine(manager.GetType().Name); // <>f__AnonymousType1'3
+            Console.WriteLine(manager1.name1); // <>f__AnonymousType1'3
+
+            //[+++]
+            //Программа скомпилируется, и на консоль будет выведена строка "Ford"
+            //var student = new { tom.Auto.Name, age };
+            //Console.WriteLine(student.Name);
+        }
+
+        private static void PartialTest()
+        {
+            var n = new PartialTest("Tom");
+            n.SayName();
+            n.HI2();
+        }
+
+        private static void ExtensionsTest()
+        {
+            var str = "Hi!";
+            str.ToMsgBox();
+        }
 
         private static void ActionSample(string s, int i)
         {

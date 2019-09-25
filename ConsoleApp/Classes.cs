@@ -4,8 +4,113 @@ using static ConsoleApp.Interfaces;
 
 namespace ConsoleApp
 {
+
     public class Classes
     {
+
+        #region ДеКОНструктор ( > С# 7.0)
+
+        internal class Person4
+        {
+            public string Name { get; set; }
+            public int Age { get; set; }
+
+            public void Deconstruct(out string name, out int age)
+            {
+                name = this.Name;
+                age = this.Age;
+            }
+
+            //Паттерн свойств
+            //static string GetMessage(Person p) => p switch
+            //{
+            //    { Language: "english" } => "Hello!",
+            //    { Language: "german", Status: "admin" } => "Hallo!",
+            //    { Language: "french" } => "Salut!",
+            //    { } => "Hello world!"
+            //};
+
+            //static string GetWelcome(string lang, string daytime) => (lang, daytime) switch
+            //{
+            //    ("english", "morning") => "Good morning",
+            //    ("english", "evening") => "Good evening",
+            //    ("german", "morning") => "Guten Morgen",
+            //    ("german", "evening") => "Guten Abend",
+            //    _ => "Здрасьть"
+            //};
+
+            //Нам не обязательно сравнивать все значения кортежа, мы можем использовать только некоторые элементы кортежа.В случае, если мы не хотим использовать элемент кортежа, то вместо него ставим прочерк:
+            //static string GetWelcome(string lang, string daytime, string status) => (lang, daytime, status) switch
+            //{
+            //    ("english", "morning", _) => "Good morning",
+            //    ("english", "evening", _) => "Good evening",
+            //    ("german", "morning", _) => "Guten Morgen",
+            //    ("german", "evening", _) => "Guten Abend",
+            //    (_, _, "admin") => "Hello, Admin",
+            //    _ => "Здрасьть"
+            //};
+        }
+
+        #endregion
+
+
+        #region Pattern matching
+
+        internal class Employee3
+        {
+            public virtual void Work()
+            {
+                Console.WriteLine("Да работаю я, работаю");
+            }
+        }
+
+        internal class Manager3 : Employee3
+        {
+            public override void Work()
+            {
+                Console.WriteLine("Отлично, работаем дальше");
+            }
+            public bool IsOnVacation { get; set; }
+        }
+
+        #endregion Pattern matching
+
+
+        #region Частичные классы / методы
+
+        internal partial class PartialTest
+        {
+            public PartialTest(string name)
+            {
+                Name = name;
+            }
+
+            partial void Hi();
+
+            public void HI2()
+            {
+                Hi();
+            }
+
+            public string Name { get; set; }
+        }
+
+        internal partial class PartialTest
+        {
+            public void SayName()
+            {
+                Console.WriteLine($"My name is {Name}!");
+            }
+
+            partial void Hi()
+            {
+                Console.WriteLine("Hi!");
+            }
+        }
+        
+        #endregion Частичные классы / методы
+
+
         #region Ковариантность и контравариантность делегатов
 
         internal class Person1
