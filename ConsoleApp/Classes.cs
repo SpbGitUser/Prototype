@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using static ConsoleApp.Interfaces;
 
 namespace ConsoleApp
@@ -7,6 +9,77 @@ namespace ConsoleApp
 
     public class Classes
     {
+
+        #region Итератор / yield
+
+        internal class Book
+        {
+            public string Name { get; set; }
+
+            public Book(string n)
+            {
+                Name = n;
+            }
+        }
+
+        internal class Libra
+        {
+            private Book[] _books;
+
+            public Libra()
+            {
+                _books = new Book[]
+                {
+                    new Book("Pushkin"),
+                    new Book("Tolstoy"),
+                    new Book("Petrov"),
+                    new Book("Gogol")
+
+                };
+            }
+
+            public int Len => _books.Length;
+
+            public IEnumerator GetEnumerator()
+            {
+                foreach (var item in _books)
+                {
+                    yield return item;
+
+                    if (item.Name == "Petrov")
+                    {
+                        yield break;
+                    }
+                }
+            }
+
+            public IEnumerator GetMyEnumerator()
+            {
+                foreach (var item in _books)
+                {
+                    yield return item;
+                    if (item.Name == "Petrov")
+                    {
+                        yield break;
+                    }
+                }
+            }
+        }
+
+
+        internal class Numbers
+        {
+            public IEnumerator GetEnumerator()
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    yield return i * i;
+                }
+            }
+        }
+        
+        #endregion Итератор / yield
+
 
         #region ДеКОНструктор ( > С# 7.0)
 

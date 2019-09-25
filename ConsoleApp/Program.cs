@@ -1,12 +1,19 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using static ConsoleApp.Classes;
 using static ConsoleApp.Enums;
 using static ConsoleApp.Interfaces;
+using static System.Console;
 
 namespace ConsoleApp
 {
     public class Program
     {
+        private static void w(object s) => WriteLine(s.ToString());
 
         static void Main(string[] args)
         {
@@ -57,21 +64,238 @@ namespace ConsoleApp
                 //PartialTest();
                 //AnonimusType();
                 //PatternMatching();
-                IntTest();
+                //IntTest();
+                //-----------------------------------
+                //OperatorsTest();
+                //-----------------------------------
+                //EnumerableTest();
+                //ArreyListTest();
+                //GenericListTest();
+                //LinkedListTest();
+                //QuueTest();
+                //StackTest();
+                //DictionaryTest();
+                //ObservableCollectionTest();
+                YieldTest();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                WriteLine(e);
                 //throw;
             }
-            Console.ReadKey();
+            ReadKey();
         }
 
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         //XXXXXXXXXXXXXXXX_T_E_S_T_I_N_G_XXXXXXXXXXXXXXXXXXX
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-        //Console.WriteLine("------------------");
+        //WriteLine("------------------");
+        //private static void Test() {}
+        
+        private static void YieldTest()
+        {
+            Numbers numbers = new Numbers();
+            foreach (int n in numbers)
+            {
+                w(n);
+            }
+            WriteLine("------------------");
+            var l = new Libra();
+            foreach (Book one in l)
+            {
+                w(one.Name);
+            }
+            WriteLine("------------------");
+            //foreach (Book one in l.GetMyEnumerator())
+            //{
+            //    w(one.Name);
+            //}
+        }
+
+        private static void ObservableCollectionTest()
+        {
+            var o = new ObservableCollection<int>();
+            o.CollectionChanged += ObColChanged;
+
+            o.Add(1);
+            o.Add(2);
+            o[1] = 77;
+            foreach (var item in o)
+            {
+                w(item.ToString());
+            }
+            //o.RemoveAt(1);
+            foreach (var item in o)
+            {
+                w(item.ToString());
+            }
+            WriteLine("------------------");
+            var lst = new List<int> { 5, 6, 7, 8, 9 };
+            for (int i = 0; i < lst.Count; i++)
+                Console.WriteLine("lst[{0}] = {1}", i, lst[i]);
+            Console.WriteLine();
+            lst.RemoveAt(3);
+
+            for (int i = 0; i < lst.Count; i++)
+                Console.WriteLine("lst[{0}] = {1}", i, lst[i]);
+        }
+
+        private static void ObColChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var act = string.Empty;
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add: // если добавление
+                    act = "ADDED";
+                    break;
+                case NotifyCollectionChangedAction.Remove: // если удаление
+                    act = "REMOVED";
+                    break;
+                case NotifyCollectionChangedAction.Replace: // если замена
+                    act = "REPLACED";
+                    break;
+            }
+
+            w(act + " >> " + e.NewItems[0].ToString());
+        }
+
+        private static void DictionaryTest()
+        {
+            var a = new Dictionary<string, string>()
+            {
+                {"a", "123"},
+                {"b", "254435"}
+            };
+            if (a.ContainsKey("a"))
+            {
+                if (a.ContainsValue("123"))
+                {
+                    w(a.Last().Value);
+                }
+            }
+
+            //начиная с C# 6.0 (Visual Studio 2015) доступен также еще один способ инициализации:
+            Dictionary<string, string> countries = new Dictionary<string, string>
+            {
+                ["Франция"] = "Париж",
+                ["Германия"] = "Берлин",
+                ["Великобритания"] = "Лондон"
+            };
+            foreach (var item in countries)
+            {
+                w(item.Value + " - " + item.Key);
+            }
+        }
+
+        private static void StackTest()
+        {
+            var a = new Stack<int>();
+            a.Push(1);
+            a.Push(2);
+            a.Push(3);
+            w(a.Pop().ToString());
+            w(a.Peek().ToString());
+        }
+
+        private static void QuueTest()
+        {
+            var a = new Queue<string>();
+            a.Enqueue("a");
+            a.Enqueue("b");
+            a.Enqueue("c");
+
+            var d = a.Dequeue();
+            w(d);
+
+            var e = a.Peek();
+            w(e);
+        }
+
+        private static void LinkedListTest()
+        {
+            var ll = new LinkedList<int>();
+            ll.AddLast(1);
+            ll.AddLast(2);
+
+            ll.AddAfter(ll.First, 7);
+
+            foreach (var item in ll)
+            {
+                WriteLine(item);
+            }
+            WriteLine("------------------");
+            WriteLine(ll.First.Previous);
+        }
+
+        private static void GenericListTest()
+        {
+            var a = new List<int>();
+            a.Add(1);
+            a.AddRange(new List<int> {1,3,5});
+            a.Insert(0, 77);
+            a.Sort((x,y) => x > y ? 1 : -1);    //ЛЯМБДА ДЛЯ СРАВНЕНИЯ
+            foreach (var item in a)
+            {
+                WriteLine(item);
+            }
+        }
+
+        private static void ArreyListTest()
+        {
+            var a  = new ArrayList();
+            a.Add(1);
+            a.Add("sd");
+            a.AddRange(new string[] { "ura", "poka"});
+            foreach (var item in a)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine("------------------");
+            a.RemoveAt(2);
+            a.Reverse();
+            for (int i = 0; i < a.Count; i++)
+            {
+                WriteLine(a[i]);
+            }
+        }
+
+        private static void EnumerableTest()
+        {
+            ArrayList objectList = new ArrayList() { 1, 2, "string", 'c', 2.0f };
+
+            object obj = 45.8;
+
+            objectList.Add(obj);
+            objectList.Add("string2");
+            objectList.RemoveAt(0); // удаление первого элемента
+            foreach (var o in objectList)
+            {
+                Console.WriteLine(o);
+            }
+            Console.WriteLine("------------------");
+            //обобщенные
+            List<string> countries = new List<string>() { "Россия", "США", "Великобритания", "Китай" };
+            countries.Add("Франция");
+            countries.RemoveAt(1); // удаление второго элемента
+            foreach (string s in countries)
+            {
+                Console.WriteLine(s);
+            }
+        }
+
+        private static void OperatorsTest()
+        {
+            var a = true;
+            var a2 = false;
+            var c = a ^ a2;
+            Console.WriteLine(c);
+            Console.WriteLine("------------------");
+            int a3 = int.MinValue;
+            Console.WriteLine($"Before: {Convert.ToString(a3, toBase: 2)}");
+            int b = a3 >> 3;
+            Console.WriteLine($"After:  {Convert.ToString(b, toBase: 2)}");
+        }
 
         // > C# 8.0 позволяет сократить конструкцию switch, которая возвращает значение:
         //static int Select3(int op, int a, int b) => op switch
@@ -381,7 +605,6 @@ namespace ConsoleApp
             }
             //Console.WriteLine($"I'm CALL -> {txt}");
         }
-
 
         private static void DelegateTest()
         {
@@ -805,7 +1028,6 @@ namespace ConsoleApp
                 Console.WriteLine("Man is not a boy :)");
             }
         }
-
 
         private static void Inheritance()
         {
