@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using static ConsoleApp.Interfaces;
 
 namespace ConsoleApp
@@ -9,6 +8,27 @@ namespace ConsoleApp
 
     public class Classes
     {
+
+        #region Binary Reader / Writer
+
+        internal struct State
+        {
+            public string name;
+            public string capital;
+            public int area;
+            public double people;
+
+            public State(string n, string c, int a, double p)
+            {
+                name = n;
+                capital = c;
+                people = p;
+                area = a;
+            }
+        }
+
+        #endregion Binary Reader / Writer
+
 
         #region Итератор / yield
 
@@ -53,7 +73,7 @@ namespace ConsoleApp
                 }
             }
 
-            public IEnumerator GetMyEnumerator()
+            internal IEnumerator GetMyEnumerator()
             {
                 foreach (var item in _books)
                 {
@@ -65,8 +85,7 @@ namespace ConsoleApp
                 }
             }
         }
-
-
+        
         internal class Numbers
         {
             public IEnumerator GetEnumerator()

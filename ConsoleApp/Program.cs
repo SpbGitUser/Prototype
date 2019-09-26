@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using static ConsoleApp.Classes;
 using static ConsoleApp.Enums;
 using static ConsoleApp.Interfaces;
@@ -13,9 +16,27 @@ namespace ConsoleApp
 {
     public class Program
     {
-        private static void w(object s) => WriteLine(s.ToString());
 
+        //--КОНСТАНТЫ-----------------------------------------
+        private const string TestFolder = @"D:\Test\";
+
+        //--ДОП. МЕТОДЫ--------------------------------------
+        private static void W(params object[] s) => WriteLine(string.Join(" ", s.Select(r => r.ToString())));
+        
+        private static string FP(string fileName)
+        {
+            return $"{TestFolder}{fileName}";
+        }
+
+        //--ЗАПУСК-------------------------------------------
         static void Main(string[] args)
+        {
+            //тесты в виде статических методов
+            StaticTests();
+        }
+
+        //--ЭТАПЫ ТЕСТОВ-------------------------------------
+        private static void StaticTests()
         {
             try
             {
@@ -26,7 +47,6 @@ namespace ConsoleApp
                 //OperatorOverridingTest();
                 //Indexator();
                 //Inheritance();
-                //-----------------------------------
                 //TypesConvertion();
                 //TypesConvertion2();
                 //TypesConvertion3();
@@ -34,7 +54,6 @@ namespace ConsoleApp
                 //TypesConvertion5();
                 //TypesConvertion6();
                 //TypesConvertion7();
-                //-----------------------------------
                 //EqualsTest();
                 //EqualsTest1();
                 //GenricsTest();
@@ -53,21 +72,17 @@ namespace ConsoleApp
                 //DelegateTest();
                 //EventTest();
                 //LambdaTEst();
-                //-----------------------------------
                 //KovariantnostDelegata();
                 //KontrvariantnostDelegata();
                 //KovariantnostGenericDelegata();
                 //KontrvariantnostGenericDelegata();
                 //DelegateVariants();
-                //-----------------------------------
                 //ExtensionsTest();
                 //PartialTest();
                 //AnonimusType();
                 //PatternMatching();
                 //IntTest();
-                //-----------------------------------
                 //OperatorsTest();
-                //-----------------------------------
                 //EnumerableTest();
                 //ArreyListTest();
                 //GenericListTest();
@@ -76,13 +91,22 @@ namespace ConsoleApp
                 //StackTest();
                 //DictionaryTest();
                 //ObservableCollectionTest();
-                YieldTest();
+                //YieldTest();
+                //DriveInfoTest();
+                //DirectoryInfoTest();
+                //DirectoryInfoTest2();
+                //FileStramTest();
+                //FileStramSeekTest();
+                //StreamReaderWriterTest();
+                //BinaryWriterReaderTest();
+                GZipStreamDeflateStreamTest();
             }
             catch (Exception e)
             {
                 WriteLine(e);
                 //throw;
             }
+            W("XXXXXXXXXXXXXXXXXXX_THE_END_XXXXXXXXXXXXXXXXXXX");
             ReadKey();
         }
 
@@ -92,24 +116,266 @@ namespace ConsoleApp
 
         //WriteLine("------------------");
         //private static void Test() {}
-        
+
+        private static void GZipStreamDeflateStreamTest()
+        {
+            string sourceFile = FP("Pdf_1.pdf"); // исходный файл
+            string compressedFile = FP("book.gz"); // сжатый файл
+            string targetFile = FP("book_new.pdf"); // восстановленный файл
+
+            // поток для чтения исходного файла
+            using (FileStream sourceStream = new FileStream(sourceFile, FileMode.OpenOrCreate))
+            {
+                // поток для записи сжатого файла
+                using (FileStream targetStream = File.Create(compressedFile))
+                {
+                    // поток архивации
+                    using (GZipStream compressionStream = new GZipStream(targetStream, CompressionMode.Compress))
+                    {
+                        sourceStream.CopyTo(compressionStream); // копируем байты из одного потока в другой
+                        Console.WriteLine("Сжатие файла {0} завершено. Исходный размер: {1}  сжатый размер: {2}.",
+                            sourceFile, sourceStream.Length.ToString(), targetStream.Length.ToString());
+                    }
+                }
+            }
+            W("");
+            // поток для чтения из сжатого файла
+            using (FileStream sourceStream = new FileStream(compressedFile, FileMode.OpenOrCreate))
+            {
+                // поток для записи восстановленного файла
+                using (FileStream targetStream = File.Create(targetFile))
+                {
+                    // поток разархивации
+                    using (GZipStream decompressionStream = new GZipStream(sourceStream, CompressionMode.Decompress))
+                    {
+                        decompressionStream.CopyTo(targetStream);
+                        Console.WriteLine("Восстановлен файл: {0}", targetFile);
+                    }
+                }
+            }
+        }
+
+        private static void BinaryWriterReaderTest()
+        {
+            State[] states = new State[2];
+            states[0] = new State("Германия", "Берлин", 357168, 80.8);
+            states[1] = new State("Франция", "Париж", 640679, 64.7);
+
+            string path = FP("states.dat");
+
+            using (var b = new BinaryWriter(File.Open(path, FileMode.OpenOrCreate)))
+            {
+                foreach (var st in states)
+                {
+                    b.Write(st.name);
+                    b.Write(st.area);
+                    b.Write(st.capital);
+                    b.Write(st.people);
+                }
+            }
+
+            using (var br = new BinaryReader(File.Open(path, FileMode.Open)))
+            {
+                while (br.PeekChar() > -1)
+                {
+                    var name = br.ReadString();
+                    var cpital = br.ReadString();
+                    var area = br.ReadInt32();
+                    var people = br.ReadDouble();
+
+                    W(name,cpital,area,people);
+                }
+            }
+        }
+
+        private static void StreamReaderWriterTest()
+        {
+            string ssr;
+            using (var sr = new StreamReader(FP("StreamReader.txt")))
+            {
+                ssr = sr.ReadToEnd();
+                W(ssr);
+            }
+            WriteLine("------------------");
+            using (var sr = new StreamReader(FP("StreamReader.txt"), Encoding.Default))
+            {
+                string ln;
+                while ((ln = sr.ReadLine()) != null)
+                {
+                    W(ln);
+                }
+            }
+            WriteLine("------------------");
+            using (var sr = new StreamReader(FP("StreamReader.txt"), Encoding.UTF8))
+            {
+                char[] arr = new char[4];
+                sr.Read(arr, 0, 4);
+
+                W(arr);
+
+                using (var sw = new StreamWriter(FP("StreamReader2_NoEncoding.txt"), true))
+                {
+                    sw.Write(ssr);
+                }
+                using (var sw = new StreamWriter(FP("StreamReader2_Default.txt"), true, Encoding.Default))
+                {
+                    sw.Write(ssr);
+                }
+                using (var sw = new StreamWriter(FP("StreamReader2_UTF8.txt"), true, Encoding.UTF8))
+                {
+                    sw.Write(ssr);
+                }
+            }
+        }
+
+
+        private static void FileStramSeekTest()
+        {
+            string text = "hello world";
+            // запись в файл
+            using (FileStream fstream = new FileStream(FP("FileStreamTest1.txt"), FileMode.OpenOrCreate))
+            {
+                // преобразуем строку в байты
+                byte[] input = Encoding.Default.GetBytes(text);
+                // запись массива байтов в файл
+                fstream.Write(input, 0, input.Length);
+                Console.WriteLine("Текст записан в файл");
+
+                // перемещаем указатель в конец файла, до конца файла- пять байт
+                fstream.Seek(-5, SeekOrigin.End); // минус 5 символов с конца потока
+
+                // считываем четыре символов с текущей позиции
+                byte[] output = new byte[4];
+                fstream.Read(output, 0, output.Length);
+                // декодируем байты в строку
+                string textFromFile = Encoding.Default.GetString(output);
+                Console.WriteLine("Текст из файла: {0}", textFromFile); // worl
+
+                // заменим в файле слово world на слово house
+                string replaceText = "house";
+                fstream.Seek(-5, SeekOrigin.End); // минус 5 символов с конца потока
+                input = Encoding.Default.GetBytes(replaceText);
+                fstream.Write(input, 0, input.Length);
+
+                // считываем весь файл
+                // возвращаем указатель в начало файла
+                fstream.Seek(0, SeekOrigin.Begin);
+                output = new byte[fstream.Length];
+                fstream.Read(output, 0, output.Length);
+                // декодируем байты в строку
+                textFromFile = Encoding.Default.GetString(output);
+                Console.WriteLine("Текст из файла: {0}", textFromFile); // hello house
+            }
+
+            ///FILESTREAM без Using'a НУЖНО ЗАКРЫВАТЬ
+
+            //if (fstream != null)
+                //fstream.Close();
+        }
+
+        private static void FileStramTest()
+        {
+            var di = new DirectoryInfo(TestFolder);
+            if (!di.Exists)
+            {
+                di.Create();
+            }
+            W("Enter the text, please:");
+            string txt = Console.ReadLine();
+            W(string.Empty);
+
+            ///нормализации текста, после которого он пригоден для сравнения.
+            ///Композиция, декомпозиция, и преобразование экзотических символов
+            ///В Unicode есть 4 вида нормализации. Первые два из них — композиция и 
+            /// декомпозиция — позволяют справиться со следующими проблемами:
+            ///В Unicode одна и таже сложная буква типа «Ç» может быть представлена в двух формах:
+            ///в виде единой буквы и в виде базовой буквы(«C») и модификаторов. Процесс, 
+            /// при котором все буквы по возможности объединяются в одну, называется композицией
+            ///  (Normalization Form C, далее — NFC), а процесс, при котором все буквы по
+            ///  возможности разбиваются на модификаторы — декомпозицией(Normalization Form D, далее — NFD).
+
+
+            var fp = FP("FileStreamTest.txt");
+            if (!string.IsNullOrEmpty(txt))
+            using (var fs = new FileStream(fp, FileMode.OpenOrCreate))
+            {
+                byte[] array = Encoding.Default.GetBytes(txt);
+                fs.Write(array, 0, array.Length);
+                W("Writing has DONE!");
+            }
+            W(string.Empty);
+            if (File.Exists(fp))
+            {
+                using (var fs2 = File.OpenRead(fp))
+                {
+                    byte[] array2 = new byte[fs2.Length];
+                    fs2.Read(array2, 0, array2.Length);
+                    var res = Encoding.Default.GetString(array2);
+                    W($"RESULT IS >>> {res}");
+                }
+            }
+        }
+
+        private static void DirectoryInfoTest2()
+        {
+            var subPath = "NewSub";
+            var di = new DirectoryInfo(TestFolder);
+            if (!di.Exists)
+            {
+                di.Create();
+                di.CreateSubdirectory(subPath);
+            }
+            Directory.Delete(TestFolder, false);
+        }
+
+        private static void DirectoryInfoTest()
+        {
+            string dirName = "C:\\Program Files";
+
+            DirectoryInfo dirInfo = new DirectoryInfo(dirName);
+
+            Console.WriteLine("Название каталога: {0}", dirInfo.Name);
+            Console.WriteLine("Полное название каталога: {0}", dirInfo.FullName);
+            Console.WriteLine("Время создания каталога: {0}", dirInfo.CreationTime);
+            Console.WriteLine("Корневой каталог: {0}", dirInfo.Root);
+        }
+
+        private static void DriveInfoTest()
+        {
+            var drvs = DriveInfo.GetDrives();
+            foreach (var d in drvs)
+            {
+                W("Название: " + d.Name);
+                W("Тип: " + d.DriveType);
+                if (d.IsReady)
+                {
+                    W("Объем диска: " + d.TotalSize);
+                    W("Свободное пространство: " + d.TotalFreeSpace);
+                    W("Метка: " + d.VolumeLabel);
+                }
+            }
+        }
+
+        /// <summary>
+        /// ИТЕРАТОР
+        /// </summary>
         private static void YieldTest()
         {
             Numbers numbers = new Numbers();
             foreach (int n in numbers)
             {
-                w(n);
+                W(n);
             }
             WriteLine("------------------");
             var l = new Libra();
             foreach (Book one in l)
             {
-                w(one.Name);
+                W(one.Name);
             }
             WriteLine("------------------");
             //foreach (Book one in l.GetMyEnumerator())
             //{
-            //    w(one.Name);
+            //    W(one.Name);
             //}
         }
 
@@ -123,12 +389,12 @@ namespace ConsoleApp
             o[1] = 77;
             foreach (var item in o)
             {
-                w(item.ToString());
+                W(item.ToString());
             }
             //o.RemoveAt(1);
             foreach (var item in o)
             {
-                w(item.ToString());
+                W(item.ToString());
             }
             WriteLine("------------------");
             var lst = new List<int> { 5, 6, 7, 8, 9 };
@@ -157,7 +423,7 @@ namespace ConsoleApp
                     break;
             }
 
-            w(act + " >> " + e.NewItems[0].ToString());
+            W(act + " >> " + e.NewItems[0].ToString());
         }
 
         private static void DictionaryTest()
@@ -171,7 +437,7 @@ namespace ConsoleApp
             {
                 if (a.ContainsValue("123"))
                 {
-                    w(a.Last().Value);
+                    W(a.Last().Value);
                 }
             }
 
@@ -184,7 +450,7 @@ namespace ConsoleApp
             };
             foreach (var item in countries)
             {
-                w(item.Value + " - " + item.Key);
+                W(item.Value + " - " + item.Key);
             }
         }
 
@@ -194,8 +460,8 @@ namespace ConsoleApp
             a.Push(1);
             a.Push(2);
             a.Push(3);
-            w(a.Pop().ToString());
-            w(a.Peek().ToString());
+            W(a.Pop().ToString());
+            W(a.Peek().ToString());
         }
 
         private static void QuueTest()
@@ -206,10 +472,10 @@ namespace ConsoleApp
             a.Enqueue("c");
 
             var d = a.Dequeue();
-            w(d);
+            W(d);
 
             var e = a.Peek();
-            w(e);
+            W(e);
         }
 
         private static void LinkedListTest()
