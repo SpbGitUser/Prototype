@@ -6,6 +6,8 @@ using System.Collections.Specialized;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 using static ConsoleApp.Classes;
 using static ConsoleApp.Enums;
@@ -35,11 +37,12 @@ namespace ConsoleApp
             StaticTests();
         }
 
-        //--ЭТАПЫ ТЕСТОВ-------------------------------------
+        //--ЭТАПЫ ТЕСТИРОВАНИЯ------------------------------
         private static void StaticTests()
         {
             try
             {
+                W("XXXXXXXXXXXXXXXXXXXX_START_XXXXXXXXXXXXXXXXXXXX" + Environment.NewLine);
                 //EmptyString();
                 //StringNullTest1();
                 //ArreyTest1();
@@ -99,14 +102,19 @@ namespace ConsoleApp
                 //FileStramSeekTest();
                 //StreamReaderWriterTest();
                 //BinaryWriterReaderTest();
-                GZipStreamDeflateStreamTest();
+                //GZipStreamDeflateStreamTest();
+                //BinaryFormatterTest();
+                //SoapFormatterTest();
+                XmlSerializerTest();
+
+
             }
             catch (Exception e)
             {
                 WriteLine(e);
                 //throw;
             }
-            W("XXXXXXXXXXXXXXXXXXX_THE_END_XXXXXXXXXXXXXXXXXXX");
+            W(Environment.NewLine + "XXXXXXXXXXXXXXXXXXX_THE_END_XXXXXXXXXXXXXXXXXXX");
             ReadKey();
         }
 
@@ -116,6 +124,52 @@ namespace ConsoleApp
 
         //WriteLine("------------------");
         //private static void Test() {}
+
+        private static void XmlSerializerTest()
+        {
+            
+        }
+
+        /// <summary>
+        /// System.Runtime.Serialization.Formatters.Soap.dll
+        /// </summary>
+        private static void SoapFormatterTest()
+        {
+            var person = new Serel("Tom", 25);
+            var person1 = new Serel("Sam", 31);
+            var peoplw = new[] { person, person1 };
+            var formatter = new SoapFormatter();
+            using (var stream = new FileStream(FP("SoapFormatter.soap"), FileMode.OpenOrCreate))
+            {
+                formatter.Serialize(stream, peoplw);
+            }
+
+            using (var stramReader = new FileStream(FP("SoapFormatter.soap"), FileMode.OpenOrCreate))
+            {
+                var ps = formatter.Deserialize(stramReader) as Serel[];
+                W(ps?.Select(r => r).Last().Name);
+                W(ps?.Select(r => r).Last().Year);
+            }
+        }
+
+        private static void BinaryFormatterTest()
+        {
+            var person = new Serel("Tom", 25);
+            var person1 = new Serel("Sam", 31);
+            var peoplw = new[] {person, person1};
+            var formatter = new BinaryFormatter();
+            using (var stream = new FileStream(FP("BinaryFormatter.dat"), FileMode.OpenOrCreate))
+            {
+                formatter.Serialize(stream, peoplw);
+            }
+
+            using (var stramReader = new FileStream(FP("BinaryFormatter.dat"), FileMode.OpenOrCreate))
+            {
+                var ps = formatter.Deserialize(stramReader) as Serel[];
+                W(ps?.Select(r => r).Last().Name);
+                W(ps?.Select(r => r).Last().Year);
+            }
+        }
 
         private static void GZipStreamDeflateStreamTest()
         {

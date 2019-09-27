@@ -8,6 +8,62 @@ namespace ConsoleApp
 
     public class Classes
     {
+        #region Сериализация
+
+        /// <summary>
+        /// Сериализация представляет процесс преобразования какого-либо объекта в поток байтов
+        /// </summary>
+        /// Формат сериализации
+        /// - бинарный      BinaryFormatter
+        /// - SOAP          SoapFormatter
+        /// - xml           XmlSerializer
+        /// - JSON          DataContractJsonSerializer
+        /// 
+        /// Для классов BinaryFormatter и SoapFormatter
+        /// public interface IFormatter
+        //{
+        //    SerializationBinder Binder { get; set; }
+        //    StreamingContext Context { get; set; }
+        //    ISurrogateSelector SurrogateSelector { get; set; }
+        //    object Deserialize(Stream serializationStream);
+        //    void Serialize(Stream serializationStream, object graph);
+        //}
+
+        [Serializable]
+        internal class Serel
+        {
+            public string Name { get; set; }
+            public int Year { get; set; }
+
+            [NonSerialized]
+            public string AccNumber = string.Empty;
+
+            public Serel(string name, int year, string acc)
+            {
+                Name = name;
+                Year = year;
+                AccNumber = acc;
+            }
+
+            public Serel(string name, int year)
+            {
+                Name = name;
+                Year = year;
+            }
+
+        }
+
+        [Serializable]
+        internal class SerelSon : Serel
+        {
+            public SerelSon(string name, int year, string acc) : base(name, year, acc)
+            {
+            }
+        }
+
+
+        #endregion Сериализация
+
 
         #region Binary Reader / Writer
 
