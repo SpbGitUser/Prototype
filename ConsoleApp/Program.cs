@@ -8,7 +8,9 @@ using System.IO.Compression;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
+using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Xml.Serialization;
 using static ConsoleApp.Classes;
 using static ConsoleApp.Enums;
 using static ConsoleApp.Interfaces;
@@ -42,7 +44,7 @@ namespace ConsoleApp
         {
             try
             {
-                W("XXXXXXXXXXXXXXXXXXXX_START_XXXXXXXXXXXXXXXXXXXX" + Environment.NewLine);
+                W("-------------------- START --------------------" + Environment.NewLine);
                 //EmptyString();
                 //StringNullTest1();
                 //ArreyTest1();
@@ -105,8 +107,8 @@ namespace ConsoleApp
                 //GZipStreamDeflateStreamTest();
                 //BinaryFormatterTest();
                 //SoapFormatterTest();
-                XmlSerializerTest();
-
+                //XmlSerializerTest();
+                DataContractJsonSerializerTest();
 
             }
             catch (Exception e)
@@ -114,7 +116,7 @@ namespace ConsoleApp
                 WriteLine(e);
                 //throw;
             }
-            W(Environment.NewLine + "XXXXXXXXXXXXXXXXXXX_THE_END_XXXXXXXXXXXXXXXXXXX");
+            W(Environment.NewLine + "------------------- THE_END -------------------");
             ReadKey();
         }
 
@@ -125,9 +127,52 @@ namespace ConsoleApp
         //WriteLine("------------------");
         //private static void Test() {}
 
+        private static void DataContractJsonSerializerTest()
+        {
+            var p1 = new SerializedPerson("Tom", 1951, new SerializeableCompany { Name = "Adidas" });
+            var p2 = new SerializedPerson("Jack", 1992, new SerializeableCompany { Name = "Nike" });
+            var p3 = new SerializedPerson("Ted", 1982);
+            var formatter = new DataContractJsonSerializer(typeof(SerializedPerson[]));
+            var filePath = FP("JsonSerialization.json");
+            using (var fs = new FileStream(filePath, File.Exists(filePath) ? FileMode.Truncate : FileMode.OpenOrCreate))
+            {
+                formatter.WriteObject(fs, new[] { p1, p3, p2 });
+                W("JSON Serialization Finished");
+            }
+            W(Environment.NewLine);
+
+            using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
+            {
+                var a = (SerializedPerson[])formatter.ReadObject(fs);
+                W("Count: " + a.Length);
+                W("Name: " + a.First().Name);
+                W("Year: " + a.First().Year);
+                W("Company: " + a.First().Company?.Name);
+            }
+        }
+
         private static void XmlSerializerTest()
         {
-            
+            var p1 = new SerializedPerson("Tom", 1951, new SerializeableCompany {Name = "Adidas"});
+            var p2 = new SerializedPerson("Jack", 1992, new SerializeableCompany {Name = "Nike"});
+            var p3 = new SerializedPerson("Ted", 1982);
+            var formatter = new XmlSerializer(typeof(SerializedPerson[]));
+            var filePath = FP("XmlSerialization.xml");
+            using (var fs = new FileStream(filePath, File.Exists(filePath) ? FileMode.Truncate : FileMode.OpenOrCreate))
+            {
+                formatter.Serialize(fs, new[] { p1, p3, p2 });
+                W("XML Serialization Finished");
+            }
+            W(Environment.NewLine);
+
+            using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
+            {
+               var a = (SerializedPerson[])formatter.Deserialize(fs);
+                W("Count: " + a.Length);
+                W("Name: " + a.Last().Name);
+                W("Year: " + a.Last().Year);
+                W("Company: " + a.Last().Company?.Name);
+            }
         }
 
         /// <summary>
@@ -135,8 +180,8 @@ namespace ConsoleApp
         /// </summary>
         private static void SoapFormatterTest()
         {
-            var person = new Serel("Tom", 25);
-            var person1 = new Serel("Sam", 31);
+            var person = new SerializedPerson("Tom", 25);
+            var person1 = new SerializedPerson("Sam", 31);
             var peoplw = new[] { person, person1 };
             var formatter = new SoapFormatter();
             using (var stream = new FileStream(FP("SoapFormatter.soap"), FileMode.OpenOrCreate))
@@ -146,7 +191,7 @@ namespace ConsoleApp
 
             using (var stramReader = new FileStream(FP("SoapFormatter.soap"), FileMode.OpenOrCreate))
             {
-                var ps = formatter.Deserialize(stramReader) as Serel[];
+                var ps = formatter.Deserialize(stramReader) as SerializedPerson[];
                 W(ps?.Select(r => r).Last().Name);
                 W(ps?.Select(r => r).Last().Year);
             }
@@ -154,8 +199,8 @@ namespace ConsoleApp
 
         private static void BinaryFormatterTest()
         {
-            var person = new Serel("Tom", 25);
-            var person1 = new Serel("Sam", 31);
+            var person = new SerializedPerson("Tom", 25);
+            var person1 = new SerializedPerson("Sam", 31);
             var peoplw = new[] {person, person1};
             var formatter = new BinaryFormatter();
             using (var stream = new FileStream(FP("BinaryFormatter.dat"), FileMode.OpenOrCreate))
@@ -165,7 +210,7 @@ namespace ConsoleApp
 
             using (var stramReader = new FileStream(FP("BinaryFormatter.dat"), FileMode.OpenOrCreate))
             {
-                var ps = formatter.Deserialize(stramReader) as Serel[];
+                var ps = formatter.Deserialize(stramReader) as SerializedPerson[];
                 W(ps?.Select(r => r).Last().Name);
                 W(ps?.Select(r => r).Last().Year);
             }
@@ -340,14 +385,26 @@ namespace ConsoleApp
 
             ///нормализации текста, после которого он пригоден для сравнения.
             ///Композиция, декомпозиция, и преобразование экзотических символов
-            ///В Unicode есть 4 вида нормализации. Первые два из них — композиция и 
-            /// декомпозиция — позволяют справиться со следующими проблемами:
+            ///В Unicode есть 4 вида нормализации. 
+            /// 
+            /// Первые два из них — композиция и декомпозиция — позволяют справиться со следующими проблемами:
             ///В Unicode одна и таже сложная буква типа «Ç» может быть представлена в двух формах:
             ///в виде единой буквы и в виде базовой буквы(«C») и модификаторов. Процесс, 
             /// при котором все буквы по возможности объединяются в одну, называется композицией
             ///  (Normalization Form C, далее — NFC), а процесс, при котором все буквы по
             ///  возможности разбиваются на модификаторы — декомпозицией(Normalization Form D, далее — NFD).
-
+            ///
+            /// Далее.Существует множество символов, типа вышепреведенной точки «．», которые выглядят очень похожими 
+            /// на другие и могут быть подло использованы спамерами. 
+            /// Специально для таких случаев существует Normalization Form KC (NFKC)и Normalization Form KD(NFKD),
+            ///  которые, помимо(де)композиции, нормализуют следующие символы:
+            ///
+            /// Изощрённые шрифты(ℍ и ℌ)
+            /// Кружки(①)
+            /// Изменённый размер и угол поворота(ｶ и カ, ︷ и {)
+            /// Степени(⁹ и ₉)
+            /// Дроби(¼)
+            /// Другие(™)
 
             var fp = FP("FileStreamTest.txt");
             if (!string.IsNullOrEmpty(txt))

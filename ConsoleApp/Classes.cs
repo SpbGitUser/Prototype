@@ -30,33 +30,52 @@ namespace ConsoleApp
         //}
 
         [Serializable]
-        internal class Serel
+        public class SerializedPerson    // XML SERIALIZATION  - только Public
         {
             public string Name { get; set; }
             public int Year { get; set; }
+            public SerializeableCompany Company { get; set; }
 
             [NonSerialized]
             public string AccNumber = string.Empty;
 
-            public Serel(string name, int year, string acc)
+            public SerializedPerson()
+            {
+            }
+
+            public SerializedPerson(string name, int year, string acc)
             {
                 Name = name;
                 Year = year;
                 AccNumber = acc;
             }
 
-            public Serel(string name, int year)
+            public SerializedPerson(string name, int year, SerializeableCompany cmp = null)
             {
                 Name = name;
                 Year = year;
+                Company = cmp;
             }
-
         }
 
         [Serializable]
-        internal class SerelSon : Serel
+        public class SerializeableCompany
         {
-            public SerelSon(string name, int year, string acc) : base(name, year, acc)
+            public string Name { get; set; }
+
+            // стандартный конструктор без параметров
+            public SerializeableCompany() { }
+
+            public SerializeableCompany(string name)
+            {
+                Name = name;
+            }
+        }
+
+        [Serializable]
+        public class SerializedPersonSon : SerializedPerson
+        {
+            public SerializedPersonSon(string name, int year, string acc) : base(name, year, acc)
             {
             }
         }
