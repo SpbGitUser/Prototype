@@ -10,6 +10,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using static ConsoleApp.Classes;
 using static ConsoleApp.Enums;
@@ -26,7 +27,8 @@ namespace ConsoleApp
 
         //--ДОП. МЕТОДЫ--------------------------------------
         private static void W(params object[] s) => WriteLine(string.Join(" ", s.Select(r => r.ToString())));
-        
+        private static void W(char[] s) => W(string.Join(string.Empty, s.Select(r => r.ToString())));
+
         private static string FP(string fileName)
         {
             return $"{TestFolder}{fileName}";
@@ -108,8 +110,13 @@ namespace ConsoleApp
                 //BinaryFormatterTest();
                 //SoapFormatterTest();
                 //XmlSerializerTest();
-                DataContractJsonSerializerTest();
-
+                //DataContractJsonSerializerTest();
+                //StringTest1();
+                //StringFormatTest();
+                //StringBuilderTest();
+                //RegexTest();
+                //RegexIsMatchTest();
+                RegexIsMatchTest1();
             }
             catch (Exception e)
             {
@@ -120,12 +127,169 @@ namespace ConsoleApp
             ReadKey();
         }
 
-        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        //XXXXXXXXXXXXXXXX_T_E_S_T_I_N_G_XXXXXXXXXXXXXXXXXXX
-        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        //XXXXXXXXXXXXXXXXXXXXXXXXX_T_E_S_T_I_N_G_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-        //WriteLine("------------------");
+        //W("------------------------------------");
         //private static void Test() {}
+
+        private static void RegexIsMatchTest1()
+        {
+            string s = "456-435-2318";
+            Regex regex = new Regex(@"\d{3}-\d{3}-\d{4}");
+
+            W(Regex.IsMatch(s, @"\d{3}-\d{3}-\d{4}", RegexOptions.IgnoreCase) ? "DA" : "HET");
+
+            Regex regex1 = new Regex(@"[2|3]{3}-[0-9]{3}-\d{4}"); //"222-222-2222" и "323-435-2318"
+
+            string s1 = "Мама  мыла  раму. ";
+            string pattern = @"\s*";
+            string target = "v";
+            Regex regex2 = new Regex(pattern);
+            string result = regex.Replace(s1, target);
+            W(result);
+        }
+
+        private static void RegexIsMatchTest()
+        {
+            string pattern = @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                             @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$";
+            while (true)
+            {
+                Console.WriteLine("Введите адрес электронной почты");
+                string email = Console.ReadLine();
+
+                if (Regex.IsMatch(email ?? string.Empty, pattern, RegexOptions.IgnoreCase))
+                {
+                    Console.WriteLine("Email подтвержден");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Некорректный email");
+                }
+            }
+        }
+
+        private static void RegexTest()
+        {
+            string s = "Бык тупогуб, туПогубенький бычок, у быка губа бела была тупа";
+            W(s+Environment.NewLine);
+            //var regexp = new Regex(@"туп(\w*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            //var regexp = new Regex(@"ту п(\w*)", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase); // @"ту п(\w*)" берется как "туп(\w*)"
+
+            var patternArrey = new[] { @"ту п(\w*)", @"^Б\w*", @"\w*а$", @"б.ла", @"\w*\s\w*" };
+
+            foreach (var pttrn in patternArrey)
+            {
+                var regexp = new Regex(pttrn, RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase); // @"ту п(\w*)" берется как "туп(\w*)"
+                MatchCollection mtches = regexp.Matches(s);
+                if (mtches.Count > 0)
+                {
+                    foreach (var item in mtches)
+                    {
+                        W(item);
+                    }
+                }
+                else
+                {
+                    W("Нет совпадений!");
+                }
+                W("------------------------------------");
+            }
+        }
+
+        private static void StringBuilderTest()
+        {
+            var sb = new StringBuilder("Hello world!");
+            W(sb.Insert(sb.Length, " It's Me"));
+            W(sb.Remove(0, 1));
+            W(sb.Replace("world", "men"));
+            W(sb.AppendFormat(" :)"));
+        }
+
+        private static void StringFormatTest()
+        {
+            int num = 23;
+            W(String.Format("{0:C2}", num));    //23.00 $
+            W("------------------------------------");
+            W(String.Format("{0:d4}", num));    //0023
+            W("------------------------------------");
+            W(String.Format("{0:e}", num));     //23,00000000e+01
+            W("------------------------------------");
+            W(String.Format("{0:e}", num));     //23,00000000e+01
+            W("------------------------------------");
+            W(String.Format("{0:f5}", num));     //23,00000
+            W("------------------------------------");
+            W(String.Format("{0:g}", num));     //Задает более короткий из двух форматов: F или E
+            W("------------------------------------");
+            W(String.Format("{0:n3}", num));     //23,000
+            W("------------------------------------");
+            W(String.Format("{0:p}", num));     //2300,00 %
+            W("------------------------------------");
+            W(String.Format("{0:x}", num));     //17
+        }
+
+        private static void StringTest1()
+        {
+            var src = "1234567890";
+            var dst = new[] {'a','b','c','d','e','f'};
+            src.CopyTo(0, dst, 1, 3);     //a123ef
+            ///c 0го символа SRC в DST, начиная с 1го симвога, вставляем 3 символа из SRC   
+            W(dst);
+        }
+
+        private static void StringTest()
+        {
+            var s1 = "1";
+            var s11 = "b";
+            W(s1);
+            W("------------------------------------");
+            var s2 = null as string;
+            W(s2 ?? "NULL");
+            W("------------------------------------");
+            var s3 = new string('a', 5);
+            W(s3);
+            W("------------------------------------");
+            W(string.Compare(s1,s11, StringComparison.CurrentCulture));
+            W(string.CompareOrdinal(s1, s11));
+            W(string.Concat(s1,s11));
+            W("------------------------------------");
+            string strSource = "changed";
+            char[] destination = { 'T', 'h', 'e', ' ', 'i', 'n', 'i', 't', 'i', 'a', 'l', ' ', 'a', 'r', 'r', 'a', 'y' };
+            Console.WriteLine(destination);
+            strSource.CopyTo(0, destination, 4, strSource.Length);
+            Console.WriteLine(destination);
+            W("*");
+            strSource = "A different string";
+            strSource.CopyTo(2, destination, 3, 9);
+            Console.WriteLine(destination);
+            W("------------------------------------");
+            var strSource1 = "changed c";
+            W(strSource.EndsWith("ed") ? "Yes" : "No");
+            W("------------------------------------");
+            W(string.Format("Hi, my name is {0}!", "Tom"));
+            W("------------------------------------");
+            W(strSource1.IndexOf('h'));
+            W("------------------------------------");
+            W(strSource1.Insert(strSource1.Length, " STR"));
+            W("------------------------------------");
+            W(string.Join("_", "P", "U", "N", "K", "S"));
+            W("------------------------------------");
+            W(strSource1.LastIndexOf("c", StringComparison.Ordinal));
+            W("------------------------------------");
+            W(strSource1.Replace("d c","d"));
+            W("------------------------------------");
+            W(strSource1.Substring(2, 3));
+            W("------------------------------------");
+            W(strSource1.Remove(4,2).ToUpper());
+            W("------------------------------------");
+            W("------------------------------------");
+            W("------------------------------------");
+            W("------------------------------------");
+            W("------------------------------------");
+        }
 
         private static void DataContractJsonSerializerTest()
         {
@@ -161,7 +325,7 @@ namespace ConsoleApp
             using (var fs = new FileStream(filePath, File.Exists(filePath) ? FileMode.Truncate : FileMode.OpenOrCreate))
             {
                 formatter.Serialize(fs, new[] { p1, p3, p2 });
-                W("XML Serialization Finished");
+                W("Serialization Finished");
             }
             W(Environment.NewLine);
 
