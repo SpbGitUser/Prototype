@@ -8,6 +8,88 @@ namespace ConsoleApp
 
     public class Classes
     {
+
+        #region Lazy
+
+        public class Reader
+        {
+            Library _library = new Library();
+            Lazy<Library2> _library2 = new Lazy<Library2>();
+
+            public void ReadBook()
+            {
+                _library.GetBook();
+                Console.WriteLine("ЧИТАТЕЛЬ - Читаем бумажную книгу");
+            }
+
+            /// <summary>
+            /// [!!!] Lazy вызывается через .VALUE
+            /// </summary>
+            public void ReadBookLazy()
+            {
+                _library2.Value.GetBook();
+                Console.WriteLine("ЧИТАТЕЛЬ - Читаем бумажную книгу");
+            }
+
+            public void ReadEbook()
+            {
+                Console.WriteLine("ЧИТАТЕЛЬ - Читаем книгу на компьютере");
+            }
+        }
+
+
+        public class Library
+        {
+            private string[] books = new string[99];
+
+            public void GetBook()
+            {
+                Console.WriteLine("БИБИЛИОТЕКА - Выдаем книгу читателю");
+            }
+        }
+
+        public class Library2
+        {
+            private string[] books = new string[99];
+
+            public void GetBook()
+            {
+                Console.WriteLine("БИБИЛИОТЕКА LAZY - Выдаем книгу читателю");
+            }
+        }
+
+        #endregion Lazy
+
+
+        #region Destructor
+
+        public class PersonDstr : IDisposable
+        {
+            public void Dispose()
+            {
+                Console.Beep();
+                Console.WriteLine("--- Disposed!");
+
+                ///[!!!] После вызова метода Dispose необходимо блокировать у 
+                /// объекта вызов метода Finalize с помощью GC.SuppressFinalize
+
+                // подавляем финализацию
+                GC.SuppressFinalize(this);
+
+                ///При создании производных классов от базовых, которые реализуют интерфейс 
+                /// IDisposable, следует также вызывать метод Dispose базового класса:
+                // base.Dispose(disposing);
+            }
+
+            ~PersonDstr()
+            {
+                Console.WriteLine("Destructed");
+            }
+        }
+
+        #endregion
+
+
         #region Сериализация
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -71,7 +72,7 @@ namespace ConsoleApp
                 //InterfacesTest1();
                 //InterfacesTest2();
                 //InterfacesTest3();
-                //InterfacesTest4();
+                InterfacesTest4();
                 //StringSpecificTest();
                 //InternirovanieStrok();
                 //KovariantnostTest();
@@ -116,7 +117,16 @@ namespace ConsoleApp
                 //StringBuilderTest();
                 //RegexTest();
                 //RegexIsMatchTest();
-                RegexIsMatchTest1();
+                //RegexIsMatchTest1();
+                //TestDistructor();
+                //TestIDisposed();
+                //TestIDisposed2();
+                //DateTimeTest();
+                //LazyTest();
+                //MathTest();
+                //ParserTest();
+                //ArrayTest();
+                SpanTest();
             }
             catch (Exception e)
             {
@@ -133,6 +143,150 @@ namespace ConsoleApp
 
         //W("------------------------------------");
         //private static void Test() {}
+
+        private static void SqlCollationTest() {
+            //Collation, который использовался в проекте:
+            //SQL_Latin1_General_CP1_CI_AS
+            //    Небольшое отступление о том, как прочесть Collation. (Если вы знакомы с ним, смело пропускайте.)
+            //Итак, в Collation есть несколько частей:
+
+            //SQL — параметры сортировки по SQL Server(SQL в начале Collation) или Windows(тогда было бы просто Latin1_ …);
+            //Latin1_General — локаль или используемый язык;
+            //CP1 — code page — кодовая страница;
+            //CI — Case Insensitive — без учета регистра;
+            //AS — Accent Sensitive — с учетом аксонов или диакритических знаков, проще говоря 'a' не считается равным 'ấ'.
+
+            //AI — Accent Sensitive — БЕЗ учета аксонов или диакритических знаков, проще говоря 'a' не считается равным 'ấ'.
+
+            //Этот Collation был когда-то Collation по умолчанию, когда устанавливали SQL Server.
+            //    Какие опции есть еще?
+
+            //_KS — с учетом японских иероглифов хирагана и катакана, если параметр не выбран, то SQL Server будет интерпретировать иероглифы хирагана и катакана как одинаковые.
+            //_WS — с учетом ширины символов, если параметр не выбран, то “Text” и “T e x t” считаются одинаковыми строками.
+            //_VSS — с учетом знаков выбора варианта написания в японском языке, появился с версии 2017.
+            //_UTF8 — позволяет хранить данные в UTF8.
+        }
+
+
+
+        private static void SpanTest()
+        {
+            ///[1.]
+            ///Ну и наконец был добавлен тип Span<T>, который позволяет создать 
+            /// коллекцию данных, хранимую в стеке, но доступ к которой 
+            /// осуществляется по ссылке.Тип Memory< T > является расширением
+            ///  типа Span<T> и используется для потокобезопасного доступа по
+            ///  ссылке к коллекции хранимой в стеке.
+            
+            ///[2.]
+            /// Добавлен модификатор in, который указывает, что значимый тип должен передаваться по ссылке, но при этом накладывается ограничение, что он не может быть изменен внутри метода.
+            //private int Sum(in int value1, in int value2);
+    }
+
+        private static void ArrayTest()
+        {
+            var arr = new string[2,23];
+            W(".Length = " + arr.Length);       // 26 = 2x23
+            W(".Rank = " + arr.Rank);           // 2мерный масив
+        }
+
+        private static void ParserTest()
+        {
+            IFormatProvider formatter = new NumberFormatInfo()
+            {
+                NumberDecimalSeparator = "."
+            };
+            double res;
+            if (double.TryParse("123.255555555555", NumberStyles.Number, formatter, out res))
+            {
+                W(Math.Round(res, 2, MidpointRounding.AwayFromZero));
+            }
+
+            int n = Convert.ToInt32("23");
+            W(n);
+            // n = Convert.ToInt32("2a3");      //НЕВЕРНЫЙ ФОРМАТ -> Exception
+            W(n);
+        }
+
+        private static void MathTest()
+        {
+            W(".BigMul(5,4) = " + Math.BigMul(5,4));    //20
+            W(".Ceiling(5,4) = " + Math.Ceiling(5.4));  //6
+            W(".Floor(5.4) = " + Math.Floor(5.4));      //5
+            W(".Sqrt(4) = " + Math.Sqrt(16));           //4
+            W(".Sqrt(4) = " + Math.Truncate(16.345));   //16
+        }
+
+        private static void LazyTest()
+        {
+            Reader reader = new Reader();
+            reader.ReadEbook();
+            reader.ReadBookLazy();
+            //reader.ReadBook();
+        }
+
+        private static void DateTimeTest()
+        {
+            var dateTime = new DateTime(1991, 11, 21, 12, 52, 44,  DateTimeKind.Unspecified);
+            W(dateTime);
+            var dt2 = dateTime.AddTicks(100);       //НАНОСЕКУ"НДНЫЕ ТАКТЫ
+            W(dt2.Ticks);
+            W(dt2.ToLocalTime());
+            W("------------------------------------");
+            DateTime now = DateTime.Now;
+            WriteLine("D: " + now.ToString("D"));
+            WriteLine("d: " + now.ToString("d"));
+            WriteLine("F: " + now.ToString("F"));
+            WriteLine("f: {0:f}", now);
+            WriteLine("G: {0:G}", now);
+            WriteLine("g: {0:g}", now);
+            WriteLine("M: {0:M}", now);
+            WriteLine("O: {0:O}", now);
+            WriteLine("o: {0:o}", now);
+            WriteLine("R: {0:R}", now);
+            WriteLine("s: {0:s}", now);
+            WriteLine("T: {0:T}", now);
+            WriteLine("t: {0:t}", now);
+            WriteLine("U: {0:U}", now);
+            WriteLine("u: {0:u}", now);
+            WriteLine("Y: {0:Y}", now);
+            W("------------------------------------");
+            W(now.ToString("yyyyy-zz"));
+        }
+
+        private static void TestIDisposed2()
+        {
+            using (PersonDstr p = new PersonDstr())
+            {
+                W("using");
+            }
+        }
+
+        private static void TestIDisposed()
+        {
+            PersonDstr p = null;
+            try
+            {
+                p = new PersonDstr();
+            }
+            finally
+            {
+                if (p != null)
+                {
+                    p.Dispose();
+                }
+            }
+        }
+        private static void TestDistructor()
+        {
+            var p = new PersonDstr();       //ДЕСТРУКТОР ВЫЗОВЕТСЯ В МОМЕНТ ЗАВЕРШЕНИЯ ПРОГРАММЫ
+
+            ///сборщик мусора при размещении объекта в куче определяет, 
+            /// поддерживает ли данный объект метод Finalize. 
+            /// И если объект имеет метод Finalize, то указатель на него 
+            /// сохраняется в специальной таблице, которая называется очередь финализации. 
+        }
+
 
         private static void RegexIsMatchTest1()
         {
@@ -284,10 +438,6 @@ namespace ConsoleApp
             W(strSource1.Substring(2, 3));
             W("------------------------------------");
             W(strSource1.Remove(4,2).ToUpper());
-            W("------------------------------------");
-            W("------------------------------------");
-            W("------------------------------------");
-            W("------------------------------------");
             W("------------------------------------");
         }
 
@@ -1298,7 +1448,7 @@ namespace ConsoleApp
             {
                 Console.WriteLine(n.Name);
             }
-            //Console.WriteLine("------------------");
+            Console.WriteLine("------------------");
             Array.Sort(numbers);
             foreach (var n in numbers)
             {
