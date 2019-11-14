@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using static ConsoleApp.Interfaces;
 
 namespace ConsoleApp
@@ -8,6 +9,43 @@ namespace ConsoleApp
 
     public class Classes
     {
+        #region Threading
+
+        internal class SemaphoreReader
+        {
+            private static Semaphore _sem = new Semaphore(3,3);
+            private Thread _myThread;
+            private int _countSem = 3;
+
+            public SemaphoreReader(int i)
+            {
+                _myThread = new Thread(Read);
+                _myThread.Name = $"SEMAFORE_THREAD {i}";
+                _myThread.Start();
+            }
+
+            public void Read()
+            {
+                while (_countSem > 0)
+                {
+                    _sem.WaitOne();
+
+                    Console.WriteLine($"{Thread.CurrentThread.Name} входит в библиотеку");
+                    Console.WriteLine($"{Thread.CurrentThread.Name} читает");
+                    Thread.Sleep(1000);
+                    Console.WriteLine($"{Thread.CurrentThread.Name} покидает библиотеку");
+
+                    _sem.Release();
+
+                    _countSem--;
+                    Thread.Sleep(600);
+
+                }
+            }
+        }
+
+        #endregion Threading
+
 
         #region Lazy
 
@@ -781,13 +819,13 @@ namespace ConsoleApp
         {
             public Man()
             {
-                //Console.WriteLine("Man's Basic");
+                Console.WriteLine("Man's Constructor");
             }
 
             public Man(string name) : base()
             {
                 _name = name;
-                //Console.WriteLine("Man's Band");
+                Console.WriteLine("Man's Constructor +size");
             }
 
             private string _name;
@@ -815,7 +853,7 @@ namespace ConsoleApp
         {
             public Boy(string boyName) : base(boyName)
             {
-                //Console.WriteLine("Boy's Band");
+                Console.WriteLine("Boy's COnstructor");
             }
 
             public virtual void SayMoreMore()
@@ -841,6 +879,7 @@ namespace ConsoleApp
         {
             public BigBoy(string boyName) : base(boyName)
             {
+                _name = boyName;
             }
 
             private string _name;

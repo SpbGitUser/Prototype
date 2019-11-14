@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes.cs" />
+    <Compile Include="Classes2.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="MyExtensions.cs" />

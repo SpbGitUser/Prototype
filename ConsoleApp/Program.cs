@@ -12,8 +12,10 @@ using System.Runtime.Serialization.Formatters.Soap;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Xml.Serialization;
 using static ConsoleApp.Classes;
+using static ConsoleApp.Classes2;
 using static ConsoleApp.Enums;
 using static ConsoleApp.Interfaces;
 using static System.Console;
@@ -40,6 +42,8 @@ namespace ConsoleApp
         {
             //тесты в виде статических методов
             StaticTests();
+            //тестовые ситуации
+            //QuestionTests();
         }
 
         //--ЭТАПЫ ТЕСТИРОВАНИЯ------------------------------
@@ -72,7 +76,7 @@ namespace ConsoleApp
                 //InterfacesTest1();
                 //InterfacesTest2();
                 //InterfacesTest3();
-                InterfacesTest4();
+                //InterfacesTest4();
                 //StringSpecificTest();
                 //InternirovanieStrok();
                 //KovariantnostTest();
@@ -126,7 +130,44 @@ namespace ConsoleApp
                 //MathTest();
                 //ParserTest();
                 //ArrayTest();
-                SpanTest();
+                //SpanTest();
+                //IndexArrayTest();
+                //ThreadingTest();
+                //ThreadingTest2();
+                //ParameterizedThreadStartTest();
+                //ThreadLockerTest();
+                //ThreadingMonitorTest();
+                //AutoResetEventTest();
+                //MutexTest();
+                //SemaphoreTest();
+                TimerTest();
+            }
+            catch (Exception e)
+            {
+                WriteLine(e);
+                throw;
+            }
+            W(Environment.NewLine + "------------------- THE_END -------------------");
+            ReadKey();
+        }
+
+
+        private static void QuestionTests()
+        {
+            W("-------------------- START --------------------" + Environment.NewLine);
+            try
+            {
+                //QuesTest1Q1();
+                //QuesTest1Q2();
+                //QuesTest1Q3();
+                //QuesTest1Q4();
+                //QuesTest2Q5();
+                //QuesTest2Q6();
+                //QuesTest2Q7();
+                //QuesTest2Q8();
+                //QuesTest2Q13();
+                //QuesTest2Q14();
+                QuesTest6Q57();
             }
             catch (Exception e)
             {
@@ -144,7 +185,464 @@ namespace ConsoleApp
         //W("------------------------------------");
         //private static void Test() {}
 
-        private static void SqlCollationTest() {
+        private static void QuesTest6Q57()
+        {
+            try
+            {
+                var array = new int[] { 1, 2 };
+                Console.Write(array[5]);
+            }
+            catch (ApplicationException e)
+            {
+                Console.Write(1);
+            }
+            catch (SystemException e)
+            {
+                Console.Write(2);
+                throw;
+            }
+            catch (Exception e)
+            {
+                Console.Write(3);
+            }
+            Console.ReadLine();
+        }
+
+        private static void QuesTest2Q14()
+        {
+            try
+            {
+                Calc();
+            }
+            catch (MyCustomException e)
+            {
+                Console.WriteLine("Catch MyCustomException");
+                throw;
+            }
+            catch (DivideByZeroException e)
+            {
+                Console.WriteLine("Catch Exception");
+            }
+            Console.ReadLine();
+        }
+        private static void Calc()
+        {
+            int result = 0;
+            var x = 5;
+            int y = 0;
+            try
+            {
+                result = x / y;
+            }
+            catch (MyCustomException e)
+            {
+                Console.WriteLine("Catch DivideByZeroException");
+                throw;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Catch Exception");
+            }
+            finally
+            {
+                throw new MyCustomException();
+            }
+        }
+
+        private static void QuesTest2Q13()
+        {
+            object sync = new object();
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    Work();
+                }
+                finally
+                {
+                    lock (sync)
+                    {
+                        Monitor.PulseAll(sync);
+                    }
+                }
+            });
+            thread.Start();
+            lock (sync)
+            {
+                Monitor.Wait(sync);
+            }
+            Console.WriteLine("test");
+        }
+        private static void Work()
+        {
+            Thread.Sleep(1000);
+        }
+
+        private static void QuesTest2Q8()
+        {
+            var w = new Wrap();
+            var wraps = new Wrap[3];
+            for (int i = 0; i < wraps.Length; i++)
+            {
+                wraps[i] = w;
+            }
+
+            var values = wraps.Select(x => x.Value);
+            var results = Square(values);
+            int sum = 0;
+            int count = 0;
+            foreach (var r in results)
+            {
+                count++;
+                sum += r;
+            }
+            Console.WriteLine("Count {0}", count);
+            Console.WriteLine("Sum {0}", sum);
+
+            Console.WriteLine("Count {0}", results.Count());
+            Console.WriteLine("Sum {0}", results.Sum());
+        }
+
+        static IEnumerable<int> Square(IEnumerable<int> a)
+        {
+            foreach (var r in a)
+            {
+                Console.WriteLine(r * r);
+                yield return r * r;
+            }
+        }
+
+        private static void QuesTest2Q7()
+        {
+            var c = new C7();
+            A7 a = c;
+
+            //var aa = new A7();
+            //aa.Print1();
+
+            a.Print2();
+            a.Print1();
+            c.Print2();
+
+            //a.PrintV();
+        }
+
+        private static void QuesTest2Q6()
+        {
+            lock (syncObject)
+            {
+                Write();
+            }
+        }
+        private static Object syncObject = new Object();
+        private static void Write()
+        {
+            lock (syncObject)
+            {
+                Console.WriteLine("test");
+            }
+        }
+
+        private static void QuesTest2Q5()
+        {
+            var s1 = string.Format("{0}{1}", "abc", "cba");
+            var s2 = "abc" + "cba";
+            var s3 = "abccba";
+            
+            Console.WriteLine(s1 == s2);
+            Console.WriteLine((object)s1 == (object)s2);
+            Console.WriteLine(s2 == s3);
+            Console.WriteLine((object)s2 == (object)s3);
+        }
+
+        private static void QuesTest1Q4()
+        {
+            int i = 1;
+            object obj = i;
+            ++i;
+            Console.WriteLine(i);
+            Console.WriteLine(obj);
+            Console.WriteLine((int)obj);
+        }
+
+        private static void QuesTest1Q3()
+        {
+            List<Action> actions = new List<Action>();
+            for (var count = 0; count < 10; count++)
+            {
+                actions.Add(() => Console.WriteLine(count));
+            }
+            foreach (var action in actions)
+            {
+                action();
+            }
+        }
+
+        private static void QuesTest1Q2()
+        {
+            var s = new S();
+            using (s)
+            {
+                Console.WriteLine(s.GetDispose());
+            }
+            Console.WriteLine(s.GetDispose());
+        }
+
+        private static void QuesTest1Q1()
+        {
+            //Classes2.B obj1 = new Classes2.A();
+            //obj1.Foo();
+            B obj2 = new B();
+            obj2.Foo();
+            A obj3 = new B();
+            obj3.Foo();
+        }
+
+        private static void TimerTest()
+        {
+            int num = 0;
+            TimerCallback tc = new TimerCallback(RunCounter6);
+            var timer = new Timer(tc, num, 0, 2000);
+
+        }
+        public static void RunCounter6(object obj)
+        {
+            int x = (int)obj;
+            for (int i = 1; i < 9; i++, x++)
+            {
+                Console.WriteLine($"{x * i}");
+            }
+            W("------------------------------------");
+        }
+
+        private static void SemaphoreTest()
+        {
+            for (int i = 1; i < 6; i++)
+            {
+                var reader = new SemaphoreReader(i);
+            }
+
+        }
+
+        private static Mutex _nutex = new Mutex();
+        private static void MutexTest()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Thread myThread = new Thread(RunCounter5);
+                myThread.Name = $"Поток {i.ToString()}";
+                myThread.Start();
+            }
+        }
+        public static void RunCounter5()
+        {
+            _nutex.WaitOne();
+            //AutoResetEvent.WaitAll(new WaitHandle[] {_waitHandler, _waitHandler1});
+            AutoResetEvent.WaitAny(new WaitHandle[] { _waitHandler, _waitHandler1 });
+            _sincX = 1;
+            for (int i = 0; i < 9; i++)
+            {
+                W($"{Thread.CurrentThread.Name}: {_sincX}");
+                _sincX++;
+                Thread.Sleep(300);
+            }
+            _nutex.ReleaseMutex();
+        }
+
+        private static AutoResetEvent _waitHandler = new AutoResetEvent(true);     ///* ЕСЛИ стртовое состояние (false) - нужен _waitHandler.Set();
+        private static AutoResetEvent _waitHandler1 = new AutoResetEvent(true);
+        private static void AutoResetEventTest()
+        {
+            //*_waitHandler.Set();
+            for (int i = 0; i < 5; i++)
+            {
+                Thread myThread = new Thread(RunCounter4);
+                myThread.Name = $"Поток {i.ToString()}";
+                myThread.Start();
+            }
+        }
+        public static void RunCounter4()
+        {
+            _waitHandler.WaitOne();
+            //AutoResetEvent.WaitAll(new WaitHandle[] {_waitHandler, _waitHandler1});
+            AutoResetEvent.WaitAny(new WaitHandle[] { _waitHandler, _waitHandler1 });
+            _sincX = 1;
+            for (int i = 0; i < 9; i++)
+            {
+                W($"{Thread.CurrentThread.Name}: {_sincX}");
+                _sincX++;
+                Thread.Sleep(300);
+            }
+            _waitHandler.Set();
+        }
+
+        private static void ThreadingMonitorTest()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Thread myThread = new Thread(RunCounter3);
+                myThread.Name = $"Поток {i.ToString()}";
+                myThread.Start();
+            }
+        }
+        public static void RunCounter3()
+        {
+            bool acquiredLock = false;
+            try
+            {
+                Monitor.Enter(_locker, ref acquiredLock);
+                _sincX = 1;
+                for (int i = 1; i < 9; i++)
+                {
+                    Console.WriteLine($"{Thread.CurrentThread.Name}: {_sincX}");
+                    _sincX++;
+                    Thread.Sleep(300);
+                }
+            }
+            finally
+            {
+                if (acquiredLock) Monitor.Exit(_locker);
+            }
+
+            ///Кроме блокировки и разблокировки объекта класс Monitor имеет еще ряд методов, 
+            ///которые позволяют управлять синхронизацией потоков. 
+            /// 
+            /// Monitor.Wait освобождает блокировку объекта и переводит поток в очередь ожидания объекта. 
+            /// Следующий поток в очереди готовности объекта блокирует данный объект. 
+            /// А все потоки, которые вызвали метод Wait, остаются в очереди ожидания, 
+            /// пока не получат сигнала от метода Monitor.Pulse или Monitor.PulseAll, посланного владельцем блокировки. 
+            /// 
+            /// Если метод Monitor.Pulse отправил сигнал, то поток, находящийся во главе очереди ожидания,
+            /// получает сигнал и блокирует освободившийся объект. 
+            /// 
+            /// Если же метод Monitor.PulseAll отправлен, то все потоки, находящиеся в очереди ожидания, 
+            /// получают сигнал и переходят в очередь готовности, где им снова разрешается получать блокировку объекта.
+        }
+
+        private static object _locker = new object();
+        private static int _sincX = 0;
+        private static void ThreadLockerTest()
+        {
+            var name = "";
+            for (int i = 0; i < 5; i++)
+            {
+                Thread myThread = new Thread(RunCounter2);
+                myThread.Name = name + i.ToString();
+                //name = name + " ";
+                myThread.Start();
+            }
+        }
+        public static void RunCounter2()
+        {
+            lock (_locker)
+            {
+                _sincX = 1;
+                for (int i = 1; i < 9; i++)
+                {
+                    Console.WriteLine("{0}: {1}", Thread.CurrentThread.Name, _sincX);
+                    _sincX++;
+                    Thread.Sleep(400);
+                }
+            }
+        }
+
+        private static void ParameterizedThreadStartTest()
+        {
+            var thread = new Thread(new ParameterizedThreadStart(RunCounter1));
+            var param = new int[] {27, 600};
+            thread.Start(param);
+
+            for (var i = 10; i < 19; i++)
+            {
+                W("1  - " + i);
+                Thread.Sleep(300);
+            }
+        }
+        private static void RunCounter1(object x)
+        {
+            var arr = x as int[];
+            if (arr != null)
+            {
+                var max = arr.First();
+                var sleep = arr.Last();
+                for (var i = 1; i < max; i++)
+                {
+                    W(" 2 - " + i);
+                    Thread.Sleep(sleep);
+                }
+            }
+            else
+            {
+                W("ERROR > Parameter != int[]");
+            }
+        }
+
+        private static void ThreadingTest2()
+        {
+            var thread = new Thread(RunCounter);
+            thread.Start();
+
+            for (var i = 10; i < 19; i++)
+            {
+                W("1  - " + i);
+                Thread.Sleep(300);
+            }
+        }
+        private static void RunCounter()
+        {
+            for (var i = 1; i < 9; i++)
+            {
+                W(" 2 - " + i);
+                Thread.Sleep(600);
+            }
+        }
+
+        private static void ThreadingTest()
+        {
+            // получаем текущий поток
+            var t = Thread.CurrentThread;
+
+            //получаем имя потока
+            W($"Имя потока: {t.Name}");
+            t.Name = "Метод Main";
+            W($"Имя потока: {t.Name}");
+            W($"Запущен ли поток: {t.IsAlive}");
+            W($"Приоритет потока: {t.Priority}");
+            W($"Статус потока: {t.ThreadState}");
+
+            // получаем домен приложения
+            W($"Домен приложения: {Thread.GetDomain().FriendlyName}");
+        }
+
+        private static void IndexArrayTest()
+        {
+            //Index myIndex1 = 2;     // третий элемент
+            //Index myIndex2 = ^ 2;    // предпоследний элемент
+
+            //string[] people = { "Tom", "Bob", "Sam", "Kate", "Alice" };
+            //string selected1 = people[myIndex1];    // Sam
+            //string selected2 = people[myIndex2];    // Kate
+            //Console.WriteLine(selected1);
+            //Console.WriteLine(selected2);
+
+            //W("------------------------------------");
+
+            //Index start = 1;
+            //Index end = 4;
+            //Range myRange1 = start..end;
+
+            //Range myRange2 = 1..4;
+
+            //string[] people = { "Tom", "Bob", "Sam", "Kate", "Alice" };
+            //string[] peopleRange = people[1..4]; // получаем 2, 3 и 4-й элементы из массива
+            //foreach (var person in peopleRange)
+            //{
+            //    Console.WriteLine(person);
+            //}
+        }
+
+        private static void SqlCollationTest()
+        {
             //Collation, который использовался в проекте:
             //SQL_Latin1_General_CP1_CI_AS
             //    Небольшое отступление о том, как прочесть Collation. (Если вы знакомы с ним, смело пропускайте.)
@@ -1709,7 +2207,7 @@ namespace ConsoleApp
             man2.Say();
             Console.WriteLine("------------------");
             var man1 = new Man("ManName");
-            if (man1 is Boy)
+            if (man2 is Boy)
             {
                 Boy boy2 = (Boy)man1;
                 boy2?.SayMore();
@@ -1722,13 +2220,20 @@ namespace ConsoleApp
 
         private static void Inheritance()
         {
-            //var men = new Man("Ilya");
+            var men = new Man("Ilya");
+            Console.WriteLine("------------------");
             var boy = new Boy("Nikola");
-            //var boy2 = men as Boy;
-            //var men2 = boy as Man;
-            //men2?.Say();
-            //boy2?.Say();
-            //boy?.SayMore();
+            Console.WriteLine("------------------");
+            var boy2 =  men as Boy; //контрвариантнось не проходит
+            boy2?.Say();
+            Console.WriteLine("------------------");
+            Man men2 = boy as Man;
+            men2?.Say();
+            Console.WriteLine("------------------");
+            Boy bBoy = boy;
+            bBoy?.SayMore();
+            Console.WriteLine("------------------");
+            boy?.SayMore();
         }
 
         private static void Indexator()
