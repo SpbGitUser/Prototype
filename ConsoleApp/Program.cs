@@ -13,6 +13,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using static ConsoleApp.Classes;
 using static ConsoleApp.Classes2;
@@ -140,7 +141,18 @@ namespace ConsoleApp
                 //AutoResetEventTest();
                 //MutexTest();
                 //SemaphoreTest();
-                TimerTest();
+                //TimerTest();
+                //TaskTest();
+                //TaskOuterTest();
+                //TaskArreyTest();
+                //TaskResultTest();
+                //СontinuationTaskTest();
+                //СontinuationTaskTest2();
+                //ParallelTest();
+
+                //ParallelForTest();
+                //CancellationTokenTest();
+                ParallelCancellationTokenTest();
             }
             catch (Exception e)
             {
@@ -182,8 +194,310 @@ namespace ConsoleApp
         //XXXXXXXXXXXXXXXXXXXXXXXXX_T_E_S_T_I_N_G_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
         //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+        // <<< ОБРАТИ ВНИМАНИЕ!!!! <<< ОБРАТИ ВНИМАНИЕ!!!! <<< ОБРАТИ ВНИМАНИЕ!!!!
         //W("------------------------------------");
         //private static void Test() {}
+
+        private static void ParallelCancellationTokenTest()
+        {
+
+            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+            CancellationToken token = cancelTokenSource.Token;
+
+            new Task(() =>
+            {
+                Thread.Sleep(400);
+                cancelTokenSource.Cancel();
+            }).Start();
+
+            try
+            {
+                Parallel.ForEach<int>(new List<int>()
+                    {
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8
+                    },
+                    new ParallelOptions
+                    {
+                        CancellationToken = token
+                    }, 
+                    Factorial);
+                // или так
+                //Parallel.For(1, 8, new ParallelOptions { CancellationToken = token }, Factorial);
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine("Операция прервана");
+            }
+            finally
+            {
+                cancelTokenSource.Dispose();
+            }
+
+            Console.ReadLine();
+        }
+        
+
+        private static void CancellationTokenTest()
+        {
+            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+            CancellationToken token = cancelTokenSource.Token;
+            int number = 6;
+
+            Task task1 = new Task(() => Factorial(5, token));
+
+            task1.Start();
+
+            //Если был вызван метод 
+            //cancelTokenSource.Cancel()        //, то выражение token.IsCancellationRequested возвращает true.  <<< ОБРАТИ ВНИМАНИЕ!!!!
+
+            Console.WriteLine("Введите Y для отмены операции или другой символ для ее продолжения:");
+            string s = Console.ReadLine();
+            if (s == "Y")
+                cancelTokenSource.Cancel();
+            
+        }
+
+        static void Factorial(int x, CancellationToken token)
+        {
+            int result = 1;
+            for (int i = 1; i <= x; i++)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    Console.WriteLine("Операция прервана токеном");
+                    return;
+                }
+
+                result *= i;
+                Console.WriteLine($"Факториал числа {x} равен {result}");
+                Thread.Sleep(5000);
+            }
+        }
+
+        private static void ParallelForTest()
+        {
+            //ParallelLoopResult result = Parallel.For(1, 10, Factorial2);
+
+            W("");
+            W("------------------------------------");
+            W("");
+
+            ParallelLoopResult result = Parallel.ForEach<int>(new List<int>() { 1, 3, 5, 8 },
+                Factorial2);
+            W("");
+
+            //определяет, завершилось ли полное выполнение параллельного цикла
+            W("IsCompleted = " + result.IsCompleted);
+            //возвращает индекс, на котором произошло прерывание работы цикла
+            W("LowestBreakIteration = " + result.LowestBreakIteration);
+        }
+
+        static void Factorial2(int x, ParallelLoopState pls)
+        {
+            int result = 1;
+
+            for (int i = 1; i <= x; i++)
+            {
+                result *= i;
+                if (i == 5)
+                {
+                    pls.Break();
+                    Console.WriteLine($"Выполняется ParallelLoopState {Task.CurrentId}");
+                }
+            }
+            Console.WriteLine($"Выполняется задача {Task.CurrentId}");
+            Console.WriteLine($"Факториал числа {x} равен {result}");
+        }
+
+        private static void ParallelTest()
+        {
+            Parallel.Invoke(Display, 
+                () =>
+                {
+                    Console.WriteLine($"Выполняется задача {Task.CurrentId}");
+                    Thread.Sleep(2000);
+                    Console.WriteLine($"Завершается задача {Task.CurrentId}");
+                },
+                () => Factorial(5));
+        }
+        static void Display2()
+        {
+            Console.WriteLine($"Выполняется задача {Task.CurrentId}");
+            Thread.Sleep(3000);
+            Console.WriteLine($"Завершается задача {Task.CurrentId}");
+        }
+        static void Factorial(int x)
+        {
+            int result = 1;
+
+            for (int i = 1; i <= x; i++)
+            {
+                result *= i;
+            }
+            Console.WriteLine($"Выполняется задача {Task.CurrentId}");
+            Thread.Sleep(3000);
+            Console.WriteLine($"Завершается задача {Task.CurrentId}. Результат {result}");
+        }
+
+        private static void СontinuationTaskTest2()
+        {
+            Task<int> task1 = new Task<int>(() => Sum(4, 5));
+
+            // задача продолжения
+            Task task2 = task1.ContinueWith(sum => Display(sum.Result));
+
+            task1.Start();
+
+            // ждем окончания второй задачи
+            task2.Wait();
+            Console.WriteLine("End of Main");
+        }
+
+        static int Sum(int a, int b) => a + b;
+        static void Display(int sum)
+        {
+            Console.WriteLine($"Sum: {sum}");
+        }
+
+
+        private static void СontinuationTaskTest()
+        {
+            Task task1 = new Task(() => {
+                Console.WriteLine($"Id задачи: {Task.CurrentId}");
+            });
+
+            // задача продолжения
+            Task task2 = task1.ContinueWith(Display);
+
+            task1.Start();
+
+            // ждем окончания второй задачи
+            task2.Wait();
+            Console.WriteLine("Выполняется работа метода Main");
+        }
+
+        static void Display(Task t)
+        {
+            W("");
+            Console.WriteLine($"Id задачи: {Task.CurrentId}");
+            Console.WriteLine($"Id предыдущей задачи: {t.Id}");
+            Thread.Sleep(3000);
+        }
+
+        private static void TaskResultTest()
+        {
+            var tsk = new Task<int>(() =>
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    W(i);
+                    Thread.Sleep(1000);
+                }
+                return 235;
+            });
+            tsk.Start();
+            //tsk.Wait(); <<< ОБРАТИ ВНИМАНИЕ!!!! <<< ОБРАТИ ВНИМАНИЕ!!!!  не нужен
+
+            W(tsk.Result); // <<< ОБРАТИ ВНИМАНИЕ!!!! сам делает tsk.Wait();
+        }
+
+        private static void TaskArreyTest()
+        {
+            Task[] tasks1 = new Task[3]
+            {
+                new Task(() =>
+                {
+                    Console.WriteLine("Inner 1 starting...");
+                    Thread.Sleep(3000);
+                    Console.WriteLine("Inner 1 finished.");
+                }),
+                new Task(() =>
+                {
+                    Console.WriteLine("Inner 2 starting...");
+                    Thread.Sleep(2000);
+                    Console.WriteLine("Inner 2 finished.");
+                }),
+                new Task(() =>
+                {
+                    Console.WriteLine("Inner 3 starting...");
+                    Thread.Sleep(1000);
+                    Console.WriteLine("Inner 3 finished.");
+                })
+            };
+            // запуск задач в массиве
+            foreach (var t in tasks1)
+            {
+                t.Start();
+                //t.Wait(); <<< ОБРАТИ ВНИМАНИЕ!!!! <<< ОБРАТИ ВНИМАНИЕ!!!!         чтобы дождаться окончания задачи
+            }
+            //Task.WaitAll(tasks1);//  <<< ОБРАТИ ВНИМАНИЕ!!!!     чтобы дождаться окончания ВСЕХ задач
+            //Task.WaitAny(tasks1);//  <<< ОБРАТИ ВНИМАНИЕ!!!!     чтобы дождаться окончания ЛЮБОЙ задачи
+            Console.WriteLine("Завершение метода Main");
+        }
+
+        private static void TaskOuterTest()
+        {
+            var a = 1;
+            var outer = Task.Factory.StartNew(() =>
+            {
+                Console.WriteLine("Outer task starting...");
+                var inner = Task.Factory.StartNew(() =>  // вложенная задача
+                {
+                    Console.WriteLine("Inner task starting...");
+                    Thread.Sleep(2000);
+                    Console.WriteLine("Inner task finished.");
+                }, TaskCreationOptions.AttachedToParent);
+            });
+            outer.Wait(); // ожидаем выполнения внешней задачи
+            Console.WriteLine("End of Main");
+        }
+
+        //.TaskCreationOptions <<< ОБРАТИ ВНИМАНИЕ!!!! <<< ОБРАТИ ВНИМАНИЕ!!!! <<< ОБРАТИ ВНИМАНИЕ!!!!<<< ОБРАТИ ВНИМАНИЕ!!!!
+
+        // AttachedToParent	4
+        // Указывает, что задача присоединена к родительской задаче в иерархии задач.По умолчанию дочерняя задача(это внутренняя задача, создаваемая внешней задачей) выполняется независимо от своей родительской задачи.Вы можете воспользоваться параметром AttachedToParent, чтобы синхронизировать родительские и дочерние задачи.
+        //Обратите внимание, что если родительская задача настроена с параметром DenyChildAttach, параметр AttachedToParent в дочерней задаче не действует, и эта дочерняя задача будет выполняться как отсоединенная.
+        //Дополнительные сведения см.в разделе Присоединенные и отсоединенные дочерние задачи.
+
+        //DenyChildAttach 8	
+        //Указывает, что любая дочерняя задача, для которой выполняется попытка выполнения в качестве подсоединенной дочерней задачи (т.е.она создается с параметром AttachedToParent), не сможет подключиться к родительской задаче и будет выполняться как отсоединенная дочерняя задача.Дополнительные сведения см.в разделе Присоединенные и отсоединенные дочерние задачи.
+
+        //HideScheduler	16	
+        //Не позволяет видеть внешний планировщик как текущий планировщик в созданной задаче.Это означает, что такие операции, как StartNew или ContinueWith, которые выполняются в созданной задаче, в качестве текущего планировщика будут видеть свойство Default.
+
+        //LongRunning 2	
+        //Указывает, что задача будет выполняться долго в качестве общей операции, включающей еще несколько компонентов, по размеру превышающих детализированные системы.Предоставляет сведения для TaskScheduler, что следует ожидать избыточной подписки.Превышение лимита подписки позволяет создать больше потоков, чем количество доступных аппаратных потоков.Он также подсказывает планировщику задач, что для задачи может потребоваться дополнительный поток, чтобы она не блокировала дальнейший ход работы других потоков или рабочих элементов в локальной очереди пула потоков.
+
+        //None    0	
+        //Указывает, что следует использовать поведение по умолчанию.
+
+        //PreferFairness  1	
+        //Рекомендация для TaskScheduler для планирования задач максимально прямым способом, то есть задачи, запланированные ранее, будут выполняться ранее, а более поздние — позднее.
+        //RunContinuationsAsynchronously  64	
+        //Принудительное асинхронное выполнение продолжений, добавляемых в текущую задачу.
+
+        //Обратите внимание, что элемент RunContinuationsAsynchronously доступен в перечислении TaskCreationOptions, начиная с .NET Framework 4.6.
+
+        private static void TaskTest()
+        {
+            Task task = new Task(Display);
+            task.Start();
+            Console.WriteLine("Завершение метода Main");
+        }
+
+        static void Display()
+        {
+        Console.WriteLine("Начало работы метода Display");
+
+        Console.WriteLine("Завершение работы метода Display");
+        }
 
         private static void QuesTest6Q57()
         {
