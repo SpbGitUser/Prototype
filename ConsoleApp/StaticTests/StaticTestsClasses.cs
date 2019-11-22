@@ -2,13 +2,196 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using static ConsoleApp.Interfaces;
 
-namespace ConsoleApp
+namespace ConsoleApp.StaticTests
 {
-
-    public class Classes
+    public class StaticTestsClasses
     {
+        internal class A
+        {
+            public virtual void Foo()
+            {
+                Console.Write("Class A");
+            }
+        }
+
+        internal class B : A
+        {
+            public override void Foo()
+            {
+                Console.Write("Class B");
+            }
+        }
+
+        public struct S : IDisposable
+        {
+            private bool dispose;
+            public void Dispose()
+            {
+                dispose = true;
+            }
+            public bool GetDispose()
+            {
+                return dispose;
+            }
+        }
+
+        public class A7
+        {
+            public A7()
+            {
+                V = "<a ";
+            }
+            public virtual void PrintV()
+            {
+                Console.Write(V);
+            }
+            public string V;
+
+            public virtual void Print1()
+            {
+                Console.Write("A");
+            }
+            public void Print2()
+            {
+                Console.Write("A");
+            }
+        }
+
+        public class B7 : A7
+        {
+            public B7()
+            {
+                V = "<b ";
+            }
+
+            public override void Print1()
+            {
+                Console.Write("B");
+            }
+        }
+
+        public class C7 : B7
+        {
+            public C7()
+            {
+                V = "<c ";
+            }
+
+            public override void Print1()
+            {
+                Console.Write("C");
+            }
+
+            public new void Print2()
+            {
+                Console.Write("C");
+            }
+        }
+
+        public class Wrap
+        {
+            private static int init = 0;
+            public int Value
+            {
+                get
+                {
+                    return ++init;
+                }
+            }
+        }
+
+        public class MyCustomException : DivideByZeroException
+        {
+
+        }
+
+        public class A33
+        {
+            public void OnDoWork()
+            {
+                DoWork?.Invoke(this, EventArgs.Empty);
+            }
+
+            public event EventHandler DoWork;
+        }
+
+        [Serializable]
+        public class DclNetSettings
+        {
+            public DclNetSettings() { }
+
+            public InetPaysSettings InetPays { get; set; }
+        }
+
+        [Serializable]
+        public class InetPaysSettings
+        {
+            public InetPaysSettings() { }
+
+            /// <summary>
+            /// РАУНД: адрес для обращения (новый)
+            /// </summary>
+            public string PayHdServerAddress { get; set; }
+
+            /// <summary>
+            /// Таможенная Карта: отправитель
+            /// </summary>
+            public string CustomsCardSenderInformation { get; set; }
+
+            /// <summary>
+            /// Таможенная Карта: получатель
+            /// </summary>
+            public string CustomsCardReceiverInformation { get; set; }
+
+            /// <summary>
+            /// Таможенная Карта: адрес для обращения
+            /// </summary>
+            public string CustomsCardServer { get; set; }
+
+            /// <summary>
+            /// Таможенная Карта: адрес для обращения - резервный
+            /// </summary>
+            public string CustomsCardServerReserve { get; set; }
+
+            /// <summary>
+            /// Таможенная Карта: архив - адрес для обращения
+            /// </summary>
+            public string CustomsCardServerArch { get; set; }
+
+            /// <summary>
+            /// Таможенная Карта: архив - адрес для обращения - резервный
+            /// </summary>
+            public string CustomsCardServerArchReserve { get; set; }
+        }
+
+        #region LINQ
+
+        internal class Player
+        {
+            public string Name { get; set; }
+            public string Team { get; set; }
+        }
+        internal class Team
+        {
+            public string Name { get; set; }
+            public string Country { get; set; }
+        }
+
+        internal class User
+        {
+            public string Name { get; set; }
+            public int Age { get; set; }
+            public List<string> Languages { get; set; }
+            public User()
+            {
+                Languages = new List<string>();
+            }
+        }
+
+        #endregion
+
+
         #region Threading
 
         internal class SemaphoreReader
@@ -157,7 +340,7 @@ namespace ConsoleApp
             public SerializeableCompany Company { get; set; }
 
             [NonSerialized]
-            public string AccNumber = string.Empty;
+            public string AccNumber = String.Empty;
 
             public SerializedPerson()
             {
@@ -623,26 +806,26 @@ namespace ConsoleApp
 
         #region Interfaces / Интерфейсы
 
-        internal class GenericSample<T> : IGenericIfs<string>
+        internal class GenericSample<T> : Interfaces.IGenericIfs<string>
         {
             public string Value { get; set; }
 
             public T ClassValue { get; set; }
         }
 
-        internal class Goer : IRunner, IStepper
+        internal class Goer : Interfaces.IRunner, Interfaces.IStepper
         {
-            void IRunner.Run()
+            void Interfaces.IRunner.Run()
             {
                 Console.WriteLine("Fast run :)");
             }
-            void IStepper.Run()
+            void Interfaces.IStepper.Run()
             {
                 Console.WriteLine("Stepping may be faster ;)");
             }
         }
 
-        internal abstract class Dancer : IMoveable, ISingable, ICloneable, IComparable<Dancer>
+        internal abstract class Dancer : Interfaces.IMoveable, Interfaces.ISingable, ICloneable, IComparable<Dancer>
         {
             public abstract void Move();
 
@@ -991,7 +1174,7 @@ namespace ConsoleApp
             {
                 get
                 {
-                    var res = string.Empty;
+                    var res = String.Empty;
                     switch (index)
                     {
                         case "1":
@@ -1043,6 +1226,5 @@ namespace ConsoleApp
         }
 
         #endregion Перегрузка оператора
-
     }
 }

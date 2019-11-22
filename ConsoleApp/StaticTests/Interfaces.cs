@@ -1,13 +1,11 @@
 ﻿
-namespace ConsoleApp
+namespace ConsoleApp.StaticTests
 {
     /// <summary>
     ///  Interfaces / Интерфейсы
     /// </summary>
     internal class Interfaces
     {
-
-
         internal interface IGenericIfs<T>
         {
             T Value { get; set; }
