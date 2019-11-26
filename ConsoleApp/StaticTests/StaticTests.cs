@@ -139,7 +139,9 @@ namespace ConsoleApp.StaticTests
                 //JoinGroupJoinTest();
                 //ZipTest();
                 //AsParallelTest();
-                FlagsEnymTest();
+                //FlagsEnymTest();
+                //SortingTest();
+                SortingTest();
             }
             catch (Exception e)
             {
@@ -179,10 +181,165 @@ namespace ConsoleApp.StaticTests
         //W("------------------------------------");
         //private static void Test() {}
 
+        private static void SortingTest()
+        {
+            var isBubble = false;       //сортировка пузырьком
+            var isShaker = false;       //сортировка обменом
+            var isComb = false;         //Сортировка расческой
+            var isQsort = false;        //Быстрая сортировка
+            var isInsertion = false;    //Сортировка вставками
+
+
+            //var initArray = new[] { 1, 67, 3, 7, 2, 5, 6, 2425, 85, 7, 475, 31, 897 };
+            var initArray = new[] { 1, 67, 2425, 85, 7, 475, 31, 897 };
+
+            if (isBubble)  //сортировка пузырьком
+            {
+                W("Bubble sort");
+                var arr = initArray.Clone() as int[];
+                for (var i = 0; i < arr.Length - 1; i++)
+                {
+                    for (int j = i + 1; j < arr.Length; j++)
+                    {
+                        if (arr[i] > arr[j])
+                        {
+                            Swap(arr, i, j);
+                        }
+                    }
+                }
+                WriteArray(arr);
+            }
+            
+            var count = 0;
+            if (isShaker)  //сортировка обменом
+            {
+                W("------------------------------------");
+                W("Shaker sort");
+                var arr1 = initArray.Clone() as int[];
+                var left = 0;
+                var right = arr1.Length - 1;
+                WriteArray(arr1);
+                W("------------");
+                while (left < right)
+                {
+                    //W($"#{count}");
+                    for (int i = left; i < right; i++)
+                    {
+                        if (arr1[i] > arr1[i + 1])
+                        {
+                            Swap(arr1, i, i + 1);
+                        }
+                        //WriteArray(arr1);
+                    }
+                    right--;
+                    W("------------");
+                    for (int i = right; i > left; i--)
+                    {
+                        if (arr1[i] < arr1[i - 1])
+                        {
+                            Swap(arr1, i, i - 1);
+                        }
+                        //WriteArray(arr1);
+                    }
+                    left++;
+                    count++;
+                }
+                WriteArray(arr1);
+                W("------------");
+            }
+
+
+            int count_1 = 0;
+            if (isComb) //Сортировка расческой
+            {
+                W("------------------------------------");
+                //Сортировка расческой
+                W("Comb sort");
+                var arr2 = initArray.Clone() as int[];
+                double gap = arr2.Length;
+                bool swaps = true;
+
+                count = 0;
+
+                while (gap > 1 || swaps)
+                {
+                    W($"{count} gap = {gap}");
+                    gap /= 1.247330950103979; //~0.8 длины массива
+                    if (gap < 1)
+                    {
+                        gap = 1;
+                    }
+                    int i = 0;
+                    swaps = false;
+                    count_1 = 0;
+                    while (i + gap < arr2.Length)
+                    {
+                        W($"{count}.{count_1} gap = {gap}");
+                        int igap = i + (int) gap;
+                        if (arr2[i] > arr2[igap])
+                        {
+                            Swap(arr2, igap, i);
+                            swaps = true;
+                        }
+                        WriteArray(arr2);
+                        i++;
+                        count_1++;
+                    }
+                    W("------------");
+                    count++;
+                    WriteArray(arr2);
+                    W("------------------------");
+                }
+            }
+
+            if (isQsort)    //Быстрая сортировка
+            {
+                W("Comb sort");
+                var arr3 = initArray.Clone() as int[];
+                quicksort(arr3, 0, arr3.Length -1 );
+                WriteArray(arr3);
+            }
+
+            if (isInsertion)    //Сортировка вставками
+            {
+                
+            }
+
+        }
+        private static void quicksort(int[] array, int start, int end)
+        {
+            if (start >= end)
+            {
+                return;
+            }
+            int pivot = partition(array, start, end);
+            quicksort(array, start, pivot - 1);
+            quicksort(array, pivot + 1, end);
+        }
+        private static int partition(int[] array, int start, int end)
+        {
+            int marker = start;
+            for (int i = start; i <= end; i++)
+            {
+                W($"i={i}");
+                if (array[i] <= array[end])
+                {
+                    W($"i={i} marker={marker}");
+                    W($"Swap {array[marker]}~{array[i]}");
+                    Swap(array, i, marker);
+                    marker += 1;
+                }
+                WriteArray(array);
+            }
+            W($"marker={marker}");
+            W("------------");
+            return marker - 1;
+        }
+
         private static void FlagsEnymTest()
         {
             W((int)Enums.CalcStepTarget.CalcAll);   // = 7   CalcFactPrice | CalcCustomsCost | CalcStatisticsCost
-            W((int)Enums.CalcStepTarget.CalcAll1);  // = 0   CalcFactPrice & CalcCustomsCost & CalcStatisticsCost
+            W((int)Enums.CalcStepTarget.CalcAll1);  // = 0 w  CalcFactPrice & CalcCustomsCost & CalcStatisticsCost
         }
 
         private static void AsParallelTest()

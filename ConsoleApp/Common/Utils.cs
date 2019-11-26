@@ -26,5 +26,20 @@ namespace ConsoleApp.Common
         {
             MessageBox.Show(str);
         }
+        
+        internal static void Swap(int[] myint, int i, int j)
+        {
+            int glass = myint[i];
+            myint[i] = myint[j];
+            myint[j] = glass;
+        }
+        internal static void WriteArray(int[] a)
+        {
+            foreach (var item in a)
+            {
+                Console.Write($"{item} ");
+            }
+            W(Environment.NewLine);
+        }
     }
 }
