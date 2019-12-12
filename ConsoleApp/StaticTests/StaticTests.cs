@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using static System.Console;
 using static ConsoleApp.Common.Utils;
 using static ConsoleApp.StaticTests.StaticTestsClasses;
@@ -45,6 +46,7 @@ namespace ConsoleApp.StaticTests
                 //TypesConvertion7();
                 //EqualsTest();
                 //EqualsTest1();
+                //EqualsTest2();
                 //GenricsTest();
                 //TryCatchTest();
                 //TryCatchTest1();
@@ -114,6 +116,7 @@ namespace ConsoleApp.StaticTests
                 //ParameterizedThreadStartTest();
                 //ThreadLockerTest();
                 //ThreadingMonitorTest();
+                //ThreadingMonitorTest1();
                 //AutoResetEventTest();
                 //MutexTest();
                 //SemaphoreTest();
@@ -141,7 +144,10 @@ namespace ConsoleApp.StaticTests
                 //AsParallelTest();
                 //FlagsEnymTest();
                 //SortingTest();
-                SortingTest();
+                //SortingTest();
+                //ThreadingMonitorTest1();
+                //ExceptionTest();
+                ComplieTest();
             }
             catch (Exception e)
             {
@@ -180,6 +186,114 @@ namespace ConsoleApp.StaticTests
         // ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!!
         //W("------------------------------------");
         //private static void Test() {}
+
+        // ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!!
+
+
+        private static void ComplieTest()
+        {
+#if DEBUG
+            W("1");
+#endif
+#if DEBUS
+            W("2");
+#else
+            W("3");
+#endif
+        }
+
+        private static void EqualsTest2()
+        {
+            Person person1 = new Person { Name = "Tom" };
+            Person person2 = new Person { Name = "Bob" };
+            Person person3 = new Person { Name = "Tom" };
+            object person4 = new Person { Name = "Tom" };
+            bool p1Ep2 = person1.Equals(person2);   // false
+            bool p1Ep3 = person1.Equals(person3);   // false
+
+            W(p1Ep2);
+            W(p1Ep3);
+            W(person1 == person3); // false
+            W(person3 == person4); // false
+        }
+
+        private static void ExceptionTest()
+        {
+            try
+            {
+                throw new MyException("ERROR_My_2");
+            }
+            catch (MyException2 e)
+            {
+                WriteLine(e.Message);
+                throw;
+            }
+            catch (MyException1 e)
+            {
+                WriteLine(e.Message);
+                throw;
+            }
+            catch (MyException e)
+            {
+                WriteLine(e.Message);
+                throw;
+            }
+            catch (Exception e)
+            {
+                WriteLine(e.Message);
+                throw;
+            }
+            catch
+            {
+               W("Pustoy CATCH");
+                throw;
+            }
+            finally
+            {
+                WriteLine("FInally");
+            }
+        }
+
+
+        //Вы можете вызвать AutoResetEvent.Set в любом потоке.Но вы можете вызвать
+        //Mutex.ReleaseMutex только из потока, который называется Mutex.WaitOne, 
+        //и получить в качестве результата значение true.
+        private static void ThreadingMonitorTest1()
+        {
+            object locker = new object();
+            int x = 0;
+            int y = 0;
+            Task.Run(() =>
+            {
+                Thread.Sleep(2000);
+                lock (locker)
+                {
+                    Console.WriteLine("Sending a signal...");
+                    Monitor.Pulse(locker);
+                    Console.WriteLine("The signal was sent");
+                    x = 1;
+                    Thread.Sleep(5000);
+                    Console.WriteLine("Sleep in lock finished");
+                }
+            });
+
+
+            lock (locker)
+            {
+                while (x == 0)
+                {
+                    if (y > 0)
+                    {
+                        Monitor.Pulse(locker);
+                        break;
+                    }
+                    Console.WriteLine("Wait...");
+                    Monitor.Wait(locker);
+                    Console.WriteLine("Wait finished");
+                }
+                Console.WriteLine("While finished");
+            }
+        }
 
         private static void SortingTest()
         {
@@ -1795,6 +1909,7 @@ namespace ConsoleApp.StaticTests
             var p3 = new SerializedPerson("Ted", 1982);
             var formatter = new DataContractJsonSerializer(typeof(SerializedPerson[]));
             var filePath = FP("JsonSerialization.json");
+            
             using (var fs = new FileStream(filePath, File.Exists(filePath) ? FileMode.Truncate : FileMode.OpenOrCreate))
             {
                 formatter.WriteObject(fs, new[] { p1, p3, p2 });
@@ -2959,7 +3074,7 @@ namespace ConsoleApp.StaticTests
         private static void EqualsTest()
         {
             var str = "11";
-            var str1 = "11";
+            var str1 = "1"+"1";
             var c = 11;
             var d = 11;
             if (str.Equals(str1))

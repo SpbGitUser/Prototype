@@ -7,6 +7,43 @@ namespace ConsoleApp.StaticTests
 {
     public class StaticTestsClasses
     {
+        internal class MyException1 : MyException
+        {
+            public MyException1(string mes) : base(mes)
+            {
+            }
+        }
+
+        internal class MyException2 : MyException1
+        {
+            public MyException2(string mes) : base(mes)
+            {
+            }
+        }
+
+
+        internal class Int : IInt1, IInt2
+        {
+            public int a { get; set; }
+            public int b { get; set; }
+        }
+
+        internal interface IInt1
+        {
+            int a { get; set; }
+        }
+
+        internal interface IInt2
+        {
+            int b { get; set; }
+        }
+
+
+        internal class NoModificator
+        {
+            string Abc => "ca";
+        }
+
         internal class A
         {
             public virtual void Foo()

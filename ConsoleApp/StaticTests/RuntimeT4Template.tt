@@ -1,0 +1,24 @@
+﻿<#@ template language="C#v3.5" debug="True" #>
+<#@ output extension="cs" #>
+void Select(State state)
+{
+    switch (state)
+    {
+<# foreach (string Value in Enum.GetNames(typeof(State))) { #>
+        case State.<#= Value #>:
+            // code here
+            break;
+<# } #>
+        default:
+            // code here
+            break;
+    }
+}
+<#+ 
+enum State
+{
+   Alive,
+   Dead,
+   Schrodinger
+}
+#>

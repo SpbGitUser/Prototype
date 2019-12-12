@@ -5,6 +5,13 @@ namespace ConsoleApp.StaticTests
 {
     public class Enums
     {
+        internal enum T4State
+        {
+            Alive,
+            Dead,
+            Schrodinger
+        }
+
         internal enum En
         {
             First = 15,
