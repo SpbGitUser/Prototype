@@ -5,6 +5,154 @@ using System.Threading;
 
 namespace ConsoleApp.StaticTests
 {
+    public class NumberGetHashCode
+    {
+        private int n;
+
+        public NumberGetHashCode(int value)
+        {
+            n = value;
+        }
+
+        public int Value
+        {
+            get { return n; }
+        }
+
+        public override bool Equals(Object obj)
+        {
+            if (obj == null || !(obj is NumberGetHashCode))
+                return false;
+            else
+                return n == ((NumberGetHashCode)obj).n;
+        }
+
+        public override int GetHashCode()
+        {
+            return 1;
+            //return n;
+        }
+
+        public override string ToString()
+        {
+            return n.ToString();
+        }
+    }
+
+    internal class MailManager
+    {
+        // Этап 2. Определение члена-события
+        public event EventHandler<NewMailEventArgs> NewMail;
+    }
+
+    internal class NewMailEventArgs : EventArgs
+    { }
+
+
+    internal partial class PartialTest_1
+    {
+        partial void Do(int a);
+
+        public int A(int b)
+        {
+            return 32;
+        }
+
+        //public double A(int b)
+        //{
+        //    return 32.2;
+        //}
+    }
+
+    internal partial class PartialTest_1
+    {
+        partial void Do(int a)
+        {
+            Console.WriteLine("Partial_" + a);
+        }
+
+        internal void DoExt(int a)
+        {
+            Do(a);
+        }
+    }
+
+    public class Phone
+    {
+        public const int Number = 1231;
+
+        public Phone() {}
+
+        public void Deal()
+        {
+           Console.WriteLine("Phone.Deal");
+            Cnn();
+        }
+
+        public virtual void Cnn()
+        {
+            Console.WriteLine("Phone.Cnn");
+        }
+    }
+
+    public class PhoneNew : Phone
+    {
+        public PhoneNew() {}
+
+        //public new void Deal()
+        //{
+        //    Console.WriteLine("Phone.Deal");
+        //    Cnn();
+        //}
+
+        public override void Cnn()
+        {
+            Console.WriteLine("PhoneNew.Cnn");
+        }
+    }
+
+    public interface IClass123
+    {
+    }
+    public static class Class_1 
+    {
+        
+    }
+    public static  class Class_2 
+    { 
+    }
+
+    public struct Stru_1 : IClass123
+    {
+    }
+    public struct Stru_2 //: Stru_1 - только от интерфейсов
+    {
+    }
+
+    public static class Class123
+    {
+        static Class123()
+        {
+        }
+
+        public static string A => "asd";
+    }
+
+    //НЕВОЗМОЖНО наследование для статических классов
+    //public static class Class124 : Class123 ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! ОБРАТИ ВНИМАНИЕ!!!! ==
+    //{}
+
+    public struct MyStruct
+    {
+        public int Abc;
+    }
+    // ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! ОБРАТИ ВНИМАНИЕ!!!! ==
+    //наследование от структуры невозможно
+    //public struct MyStruct2 : MyStruct
+    //{
+
+    //}
+
     public class StaticTestsClasses
     {
         internal class MyException1 : MyException
@@ -126,7 +274,15 @@ namespace ConsoleApp.StaticTests
             }
         }
 
-        public class Wrap
+        public interface IInt1123 : IInt112311
+        {
+        }
+
+        public interface IInt112311
+        {
+        }
+
+        public class Wrap : IDisposable, ICloneable 
         {
             private static int init = 0;
             public int Value
@@ -135,6 +291,16 @@ namespace ConsoleApp.StaticTests
                 {
                     return ++init;
                 }
+            }
+
+            public void Dispose()
+            {
+                //throw new NotImplementedException();
+            }
+
+            public object Clone()
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -1182,9 +1348,22 @@ namespace ConsoleApp.StaticTests
 
         #region Indextors / Индексаторы
 
-        internal class Person
+        internal class Person : IDisposable 
         {
+            public Person()
+            { }
+
+            public Person(string name)
+            {
+                throw new Exception("BAM2!");
+            }
+
             public string Name { get; set; }
+            
+            public void Dispose()
+            {
+                Console.WriteLine("Disposed - " + Name);
+            }
         }
 
         internal class People

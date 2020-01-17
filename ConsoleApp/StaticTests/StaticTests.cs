@@ -45,7 +45,7 @@ namespace ConsoleApp.StaticTests
                 //TypesConvertion6();
                 //TypesConvertion7();
                 //EqualsTest();
-                //EqualsTest1();
+                EqualsTest1();
                 //EqualsTest2();
                 //GenricsTest();
                 //TryCatchTest();
@@ -95,6 +95,7 @@ namespace ConsoleApp.StaticTests
                 //SoapFormatterTest();
                 //XmlSerializerTest();
                 //DataContractJsonSerializerTest();
+                //StringTest();
                 //StringTest1();
                 //StringFormatTest();
                 //StringBuilderTest();
@@ -147,7 +148,14 @@ namespace ConsoleApp.StaticTests
                 //SortingTest();
                 //ThreadingMonitorTest1();
                 //ExceptionTest();
-                ComplieTest();
+                //ComplieTest();
+                //DynamicTest();
+                //IDisposableTest();
+                //OverrideTest();
+                //PartialTest1();
+                //SwapTest();
+                //MethodTakingAnyTypeTest();
+                //GetHashCodeTest();
             }
             catch (Exception e)
             {
@@ -188,7 +196,124 @@ namespace ConsoleApp.StaticTests
         //private static void Test() {}
 
         // ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!!
+        
+        private static void GetHashCodeTest()
+        {
+            var a = new NumberGetHashCode(1);
+            var a2 = new NumberGetHashCode(2);
 
+            //W(a.Equals(a2) ? "DA" : "NET");
+            //W(a.Equals(a) ? "DA" : "NET");
+
+            var dic = new Dictionary<int, NumberGetHashCode>();
+            dic.Add(1, a);
+            dic.Add(2, a2);
+            W(dic.First().Equals(dic.Last()) ? "DA" : "NET");
+
+
+
+            //var dic1 = new Dictionary<int, NumberGetHashCode>();
+            //dic1.Add(1, a);
+            //dic1.Add(2, a);
+            //W(dic1.First().Equals(dic1.Last()) ? "DA" : "NET");
+
+            //var lis = new List<NumberGetHashCode>()
+            //{
+            //    a,
+            //    a2
+            //};
+        }
+
+        private static void BoolTest()
+        {
+            W("asdas");
+        }
+
+        private static void MethodTakingAnyTypeTest()
+        {
+            W(MethodTakingAnyType<string>("sdfs"));
+            W(MethodTakingAnyType("sd"+"fs"));
+            W(MethodTakingAnyType(new A33()));
+        }
+
+        private static Boolean MethodTakingAnyType<T>(T o)
+        {
+            T temp = o;
+            Console.WriteLine(o.ToString());
+            Boolean b = temp.Equals(o);
+            return b;
+        }
+
+
+        private static void SwapTest()
+        {
+            String s1 = "Jeffrey";
+            String s2 = "Richter";
+            Swap1(ref s1, ref s2);
+            Console.WriteLine(s1); // Выводит "Richter"
+            Console.WriteLine(s2); // Выводит "Jeffrey"
+        }
+        public static void Swap1<T>(ref T a, ref T b)
+        {
+            T t = b;
+            b = a;
+            a = t;
+        }
+
+        private static void PartialTest1()
+        {
+            var p = new PartialTest_1();
+            p.DoExt(123);
+        }
+
+        private static void OverrideTest()
+        {
+            var p = new PhoneNew();
+            p.Deal();
+            W("------------------------------------");
+            object pp = p;
+            ((Phone)pp).Deal();
+            W("------------------------------------");
+            W(Phone.Number);
+        }
+
+
+        /// Домен приложения — это механизм, реализованный в .NET, который позволяет 
+        /// запустить группу приложений в одном процессе, обеспечивая относительную 
+        /// изоляцию их друг от друга, в то же время позволяя им взаимодействовать 
+        /// друг с другом значительно быстрее, чем в случае отдельных процессов.
+        
+        private static void IDisposableTest()
+        {
+            Person person1;
+            try
+            {
+                person1 = new Person("Tom");
+                throw new Exception("BAM!");
+            }
+            catch (Exception e)
+            {
+                W(e.Message);
+            }
+        }
+
+        private static void DynamicTest()
+        {
+            dynamic value;
+
+            // ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!! === ОБРАТИ ВНИМАНИЕ!!!!
+            //object value; - НЕ сработает, т.к. операции == 0 и + lkz object не определены 
+
+            for (Int32 demo = 0; demo < 2; demo++)
+            {
+                value = (demo == 0) ? (dynamic) 5 : (dynamic) "A";
+                value = value + value;
+                M(value);
+            }
+        }
+
+        private static void M(Int32 n) { Console.WriteLine("M(Int32): " + n); }
+        private static void M(String s) { Console.WriteLine("M(String): " + s); }
 
         private static void ComplieTest()
         {
@@ -1857,6 +1982,22 @@ namespace ConsoleApp.StaticTests
 
         private static void StringTest()
         {
+            W("------------------------------------");
+            var s44 = "asdas";
+            var s45 = "as"+"das";
+            object s46 = "as" + "das";
+            W(s44.Equals(s45));
+            W(s44.Equals(s46));
+            W("------------------------------------");
+            String s111 = "Hello";
+            String s211 = "Hello";
+            Console.WriteLine(Object.ReferenceEquals(s111, s211)); // Должно быть 'False'
+            W(s111.Equals(s211));
+            s111 = String.Intern(s111);
+            s211 = String.Intern(s211);
+            Console.WriteLine(Object.ReferenceEquals(s111, s211)); // 'True'
+            W(s111.Equals(s211));
+            W("------------------------------------");
             var s1 = "1";
             var s11 = "b";
             W(s1);
@@ -3067,8 +3208,10 @@ namespace ConsoleApp.StaticTests
             Person person3 = new Person { Name = "Tom" };
             bool p1Ep2 = person1.Equals(person2); // false
             Console.WriteLine(p1Ep2);
+            W(person1 == person2);                // false
             bool p1Ep3 = person1.Equals(person3); // true
             Console.WriteLine(p1Ep3);
+            W(person1 == person3);                // false
         }
 
         private static void EqualsTest()
