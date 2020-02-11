@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Common;
+using ConsoleApp.ADO.Net;
 using static System.Console;
 using static ConsoleApp.Common.Utils;
 using static ConsoleApp.Threading.ThreadingTests;
@@ -65,15 +66,16 @@ namespace ConsoleApp
                         RunThreading();
                         break;
                     case Enums.StarterMode.Ado:
-                        W(Environment.NewLine);
+                        AdoStarter.Run();
                         break;
                 }
-                ReadKey();
                 W(Environment.NewLine + "------------------- THE_END -------------------");
+                ReadKey();
             }
             catch (Exception e)
             {
-                WriteLine("[!!!] ВЕРХНИЙ УРОВЕНЬ:" + Environment.NewLine + e.Message);
+                WriteLine("[!!!][TOP_ERROR}:" + Environment.NewLine + e.Message);
+                ReadKey();
             }
         }
     }

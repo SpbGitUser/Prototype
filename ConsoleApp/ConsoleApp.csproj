@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ADO.Net\AdoStarter.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="StaticTests\RuntimeT4Template.cs">
       <AutoGen>True</AutoGen>
@@ -87,7 +88,7 @@
     <Compile Include="Threading\ThreadingTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Threading\App.config">
+    <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
