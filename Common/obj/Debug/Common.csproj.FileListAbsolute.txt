@@ -1,0 +1,4 @@
+D:\WORK\PROTOTYPE\Common\bin\Debug\Common.dll
+D:\WORK\PROTOTYPE\Common\bin\Debug\Common.pdb
+D:\WORK\PROTOTYPE\Common\obj\Debug\Common.dll
+D:\WORK\PROTOTYPE\Common\obj\Debug\Common.pdb
