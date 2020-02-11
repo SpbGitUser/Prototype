@@ -12,7 +12,7 @@ namespace Common
             StaticTests = 1,
             QuestionTests = 2,
             Threading = 3,
-            Ado = 4
+            AdoNet = 4
         }
     }
 }

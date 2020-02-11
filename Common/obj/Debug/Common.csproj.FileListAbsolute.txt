@@ -2,3 +2,8 @@ D:\WORK\PROTOTYPE\Common\bin\Debug\Common.dll
 D:\WORK\PROTOTYPE\Common\bin\Debug\Common.pdb
 D:\WORK\PROTOTYPE\Common\obj\Debug\Common.dll
 D:\WORK\PROTOTYPE\Common\obj\Debug\Common.pdb
+D:\2 - PROGRAMMING\Prototype\Common\bin\Debug\Common.dll
+D:\2 - PROGRAMMING\Prototype\Common\bin\Debug\Common.pdb
+D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.dll
+D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.pdb
+D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.csprojAssemblyReference.cache

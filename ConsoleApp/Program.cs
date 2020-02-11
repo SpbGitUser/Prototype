@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Common;
 using ConsoleApp.ADO.Net;
 using static System.Console;
@@ -68,7 +69,7 @@ namespace ConsoleApp
                             //потоки
                             RunThreading();
                             break;
-                        case Enums.StarterMode.Ado:
+                        case Enums.StarterMode.AdoNet:
                             AdoStarter.Run();
                             break;
                     }

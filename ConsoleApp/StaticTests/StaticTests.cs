@@ -16,7 +16,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 using static System.Console;
 using static ConsoleApp.Common.Utils;
 using static ConsoleApp.StaticTests.StaticTestsClasses;

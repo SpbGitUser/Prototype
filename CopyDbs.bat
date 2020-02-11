@@ -1,0 +1,1 @@
+xcopy /y ConsoleApp\ADO.Net\Db\*.* D:\_Dbs\*.*
