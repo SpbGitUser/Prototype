@@ -45,12 +45,12 @@ namespace ConsoleApp.StaticTests
                 //TypesConvertion6();
                 //TypesConvertion7();
                 //EqualsTest();
-                EqualsTest1();
+                //EqualsTest1();
                 //EqualsTest2();
                 //GenricsTest();
                 //TryCatchTest();
                 //TryCatchTest1();
-                //TryCatchTest2();
+                TryCatchTest2();
                 //InterfacesTest();
                 //InterfacesTest1();
                 //InterfacesTest2();

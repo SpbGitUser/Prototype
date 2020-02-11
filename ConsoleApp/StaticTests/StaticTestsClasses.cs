@@ -1107,6 +1107,10 @@ namespace ConsoleApp.StaticTests
                 {
                     Console.WriteLine($"Catch в Method1 : {ex.Message}");
                 }
+                //catch (Exception ex)      // <<< ЕСЛИ БУДЕТ АКТИВНЫМ, ТО ПЕРЕХВАТИТ СИКЛЮЧЕНИЕ ИМЕННО ОН
+                //{
+                //    Console.WriteLine($"GENERAL Catch в Method1 : {ex.Message}");
+                //}
                 finally
                 {
                     Console.WriteLine("Блок finally в Method1");
