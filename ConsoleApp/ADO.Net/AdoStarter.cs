@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.OleDb;
 
 
@@ -27,7 +22,17 @@ namespace ConsoleApp.ADO.Net
             var connsenctionString = olebuilder.ToString();
             using (var connection = new OleDbConnection(connsenctionString))
             {
+                //await connection.OpenAsync();
                 connection.Open();
+
+                // Вывод информации о подключении
+                Console.WriteLine("Свойства подключения:");
+                Console.WriteLine("\tСтрока подключения: {0}", connection.ConnectionString);
+                Console.WriteLine("\tБаза данных: {0}", connection.Database);
+                Console.WriteLine("\tСервер: {0}", connection.DataSource);
+                Console.WriteLine("\tВерсия сервера: {0}", connection.ServerVersion);
+                Console.WriteLine("\tСостояние: {0}", connection.State);
+                //Console.WriteLine("\tWorkstationld: {0}", connection.WorkstationId);
             }
         }
 

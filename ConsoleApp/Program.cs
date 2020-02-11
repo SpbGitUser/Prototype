@@ -19,58 +19,65 @@ namespace ConsoleApp
         {
             try
             {
-                W("-------------------- START --------------------" + Environment.NewLine);
-                Enums.StarterMode mode;
-                do
+                var repeater = ConsoleKey.Enter;
+                while (repeater == ConsoleKey.Enter)
                 {
-                    W("SELECT MODE:"+ Environment.NewLine);
-                    W("> 1 - StaticTests");
-                    W("> 2 - QuestionTests");
-                    W("> 3 - Threading");
-                    W("> 4 - ADO.Net");
-                    var key = ReadKey();
-                    var keyChar = key.KeyChar.ToString();
-                    try
+                    W("-------------------- START --------------------" );
+                    Enums.StarterMode mode;
+                    do
                     {
-                        var modeId = int.Parse(keyChar);
-                        if (!Enum.IsDefined(typeof(Enums.StarterMode), modeId))
+                        W(Environment.NewLine);
+                        W("SELECT MODE:" + Environment.NewLine);
+                        W("> 1 - StaticTests");
+                        W("> 2 - QuestionTests");
+                        W("> 3 - Threading");
+                        W("> 4 - ADO.Net");
+                        var key = ReadKey();
+                        var keyChar = key.KeyChar.ToString();
+                        try
                         {
-                            throw new Exception(string.Empty);
+                            var modeId = int.Parse(keyChar);
+                            if (!Enum.IsDefined(typeof(Enums.StarterMode), modeId))
+                            {
+                                throw new Exception(string.Empty);
+                            }
+                            mode = (Enums.StarterMode) Enum.ToObject(typeof(Enums.StarterMode), modeId);
+                            if (mode != Enums.StarterMode.Unknown)
+                            {
+                                W(Environment.NewLine);
+                                W($"------SELECTED MODE IS {mode} --------------------" + Environment.NewLine);
+                            }
                         }
-                        mode = (Enums.StarterMode)Enum.ToObject(typeof(Enums.StarterMode), modeId);
-                        if (mode != Enums.StarterMode.Unknown)
+                        catch
                         {
-                            W(Environment.NewLine);
-                            W($"------SELECTED MODE IS {mode} --------------------" + Environment.NewLine);
+                            mode = Enums.StarterMode.Unknown;
                         }
-                    }
-                    catch
-                    {
-                        mode = Enums.StarterMode.Unknown;
-                    }
-                }
-                while (mode == Enums.StarterMode.Unknown);
+                    } while (mode == Enums.StarterMode.Unknown);
 
-                switch (mode)
-                {
-                    case Enums.StarterMode.StaticTests:
-                        //тесты в виде статических методов
-                        RunStaticTests();
-                        break;
-                    case Enums.StarterMode.QuestionTests:
-                        //тестовые ситуации
-                        QuestionTests();
-                        break;
-                    case Enums.StarterMode.Threading:
-                        //потоки
-                        RunThreading();
-                        break;
-                    case Enums.StarterMode.Ado:
-                        AdoStarter.Run();
-                        break;
+                    switch (mode)
+                    {
+                        case Enums.StarterMode.StaticTests:
+                            //тесты в виде статических методов
+                            RunStaticTests();
+                            break;
+                        case Enums.StarterMode.QuestionTests:
+                            //тестовые ситуации
+                            QuestionTests();
+                            break;
+                        case Enums.StarterMode.Threading:
+                            //потоки
+                            RunThreading();
+                            break;
+                        case Enums.StarterMode.Ado:
+                            AdoStarter.Run();
+                            break;
+                    }
+                    W(Environment.NewLine + "------------------- THE_END -------------------");
+                    W(Environment.NewLine);
+                    W("One more?");
+                    var key1 = ReadKey();
+                    repeater = (ConsoleKey) key1.KeyChar;
                 }
-                W(Environment.NewLine + "------------------- THE_END -------------------");
-                ReadKey();
             }
             catch (Exception e)
             {
