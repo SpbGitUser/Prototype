@@ -1,0 +1,5 @@
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\bin\Debug\EF_ModelFirst.exe.config
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\bin\Debug\EF_ModelFirst.exe
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\bin\Debug\EF_ModelFirst.pdb
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\obj\Debug\EF_ModelFirst.exe
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\obj\Debug\EF_ModelFirst.pdb

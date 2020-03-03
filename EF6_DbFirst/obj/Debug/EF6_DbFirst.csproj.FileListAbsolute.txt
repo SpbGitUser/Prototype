@@ -1,0 +1,13 @@
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\bin\Debug\userstore.mdf
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\bin\Debug\userstore_log.ldf
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\bin\Debug\EF6_DbFirst.exe.config
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\bin\Debug\EF6_DbFirst.exe
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\bin\Debug\EF6_DbFirst.pdb
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\bin\Debug\EntityFramework.dll
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\bin\Debug\EntityFramework.SqlServer.dll
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\bin\Debug\EntityFramework.xml
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\bin\Debug\EntityFramework.SqlServer.xml
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\obj\Debug\EF6_DbFirst.csprojAssemblyReference.cache
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\obj\Debug\EF6_DbFirst.csproj.CopyComplete
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\obj\Debug\EF6_DbFirst.exe
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\obj\Debug\EF6_DbFirst.pdb

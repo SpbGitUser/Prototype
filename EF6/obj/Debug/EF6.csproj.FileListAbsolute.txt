@@ -1,0 +1,11 @@
+D:\2 - PROGRAMMING\Prototype\EF6\bin\Debug\EF6.exe.config
+D:\2 - PROGRAMMING\Prototype\EF6\bin\Debug\EF6.exe
+D:\2 - PROGRAMMING\Prototype\EF6\bin\Debug\EF6.pdb
+D:\2 - PROGRAMMING\Prototype\EF6\bin\Debug\EntityFramework.dll
+D:\2 - PROGRAMMING\Prototype\EF6\bin\Debug\EntityFramework.SqlServer.dll
+D:\2 - PROGRAMMING\Prototype\EF6\bin\Debug\EntityFramework.xml
+D:\2 - PROGRAMMING\Prototype\EF6\bin\Debug\EntityFramework.SqlServer.xml
+D:\2 - PROGRAMMING\Prototype\EF6\obj\Debug\EF6.csprojAssemblyReference.cache
+D:\2 - PROGRAMMING\Prototype\EF6\obj\Debug\EF6.csproj.CopyComplete
+D:\2 - PROGRAMMING\Prototype\EF6\obj\Debug\EF6.exe
+D:\2 - PROGRAMMING\Prototype\EF6\obj\Debug\EF6.pdb
