@@ -32,15 +32,15 @@ namespace ConsoleApp.ADO.Net
 
         private static void CreateConnectionSqlite()
         {
-            var csb = new SqliteConnectionStringBuilder()
-            {
-                DataSource = @"D:\_Dbs\Base_1.db"
-            };
-            using (var connection = new SqliteConnection(csb.ToString()))
-            {
-                connection.Open();
-                WriteConnectionInfo(connection);
-            }
+            //var csb = new SqliteConnectionStringBuilder()
+            //{
+            //    DataSource = @"D:\_Dbs\Base_1.db"
+            //};
+            //using (var connection = new SqliteConnection(csb.ToString()))
+            //{
+            //    connection.Open();
+            //    WriteConnectionInfo(connection);
+            //}
         }
 
         private static void WriteConnectionInfo(DbConnection connection)
