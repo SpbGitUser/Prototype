@@ -3,3 +3,10 @@ D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\bin\Debug\EF_ModelFirst.exe
 D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\bin\Debug\EF_ModelFirst.pdb
 D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\obj\Debug\EF_ModelFirst.exe
 D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\obj\Debug\EF_ModelFirst.pdb
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\bin\Debug\EntityFramework.dll
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\bin\Debug\EntityFramework.SqlServer.dll
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\bin\Debug\EntityFramework.xml
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\bin\Debug\EntityFramework.SqlServer.xml
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\obj\Debug\EF_ModelFirst.csprojAssemblyReference.cache
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\obj\Debug\EF_ModelFirst.csproj.CoreCompileInputs.cache
+D:\2 - PROGRAMMING\Prototype\EF_ModelFirst\obj\Debug\EF_ModelFirst.csproj.CopyComplete

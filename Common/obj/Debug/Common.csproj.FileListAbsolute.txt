@@ -7,3 +7,4 @@ D:\2 - PROGRAMMING\Prototype\Common\bin\Debug\Common.pdb
 D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.dll
 D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.pdb
 D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.csprojAssemblyReference.cache
+D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache

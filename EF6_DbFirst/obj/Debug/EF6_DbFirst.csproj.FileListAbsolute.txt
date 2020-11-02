@@ -11,3 +11,4 @@ D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\obj\Debug\EF6_DbFirst.csprojAssemblyRef
 D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\obj\Debug\EF6_DbFirst.csproj.CopyComplete
 D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\obj\Debug\EF6_DbFirst.exe
 D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\obj\Debug\EF6_DbFirst.pdb
+D:\2 - PROGRAMMING\Prototype\EF6_DbFirst\obj\Debug\EF6_DbFirst.csproj.CoreCompileInputs.cache
