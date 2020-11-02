@@ -1,0 +1,7 @@
+D:\2 - PROGRAMMING\Prototype\BeforeAndAfter\bin\Debug\BeforeAndAfter.exe.config
+D:\2 - PROGRAMMING\Prototype\BeforeAndAfter\bin\Debug\BeforeAndAfter.exe
+D:\2 - PROGRAMMING\Prototype\BeforeAndAfter\bin\Debug\BeforeAndAfter.pdb
+D:\2 - PROGRAMMING\Prototype\BeforeAndAfter\obj\Debug\BeforeAndAfter.csprojAssemblyReference.cache
+D:\2 - PROGRAMMING\Prototype\BeforeAndAfter\obj\Debug\BeforeAndAfter.csproj.CoreCompileInputs.cache
+D:\2 - PROGRAMMING\Prototype\BeforeAndAfter\obj\Debug\BeforeAndAfter.exe
+D:\2 - PROGRAMMING\Prototype\BeforeAndAfter\obj\Debug\BeforeAndAfter.pdb
