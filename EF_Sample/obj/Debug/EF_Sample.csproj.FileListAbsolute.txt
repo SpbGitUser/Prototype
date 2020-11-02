@@ -1,0 +1,12 @@
+D:\2 - PROGRAMMING\Prototype\EF_Sample\bin\Debug\EF_Sample.exe.config
+D:\2 - PROGRAMMING\Prototype\EF_Sample\bin\Debug\EF_Sample.exe
+D:\2 - PROGRAMMING\Prototype\EF_Sample\bin\Debug\EF_Sample.pdb
+D:\2 - PROGRAMMING\Prototype\EF_Sample\bin\Debug\EntityFramework.dll
+D:\2 - PROGRAMMING\Prototype\EF_Sample\bin\Debug\EntityFramework.SqlServer.dll
+D:\2 - PROGRAMMING\Prototype\EF_Sample\bin\Debug\EntityFramework.xml
+D:\2 - PROGRAMMING\Prototype\EF_Sample\bin\Debug\EntityFramework.SqlServer.xml
+D:\2 - PROGRAMMING\Prototype\EF_Sample\obj\Debug\EF_Sample.csprojAssemblyReference.cache
+D:\2 - PROGRAMMING\Prototype\EF_Sample\obj\Debug\EF_Sample.csproj.CoreCompileInputs.cache
+D:\2 - PROGRAMMING\Prototype\EF_Sample\obj\Debug\EF_Sample.csproj.CopyComplete
+D:\2 - PROGRAMMING\Prototype\EF_Sample\obj\Debug\EF_Sample.exe
+D:\2 - PROGRAMMING\Prototype\EF_Sample\obj\Debug\EF_Sample.pdb

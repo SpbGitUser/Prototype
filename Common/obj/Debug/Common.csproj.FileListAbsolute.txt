@@ -7,4 +7,9 @@ D:\2 - PROGRAMMING\Prototype\Common\bin\Debug\Common.pdb
 D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.dll
 D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.pdb
 D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.csprojAssemblyReference.cache
+<<<<<<< HEAD
 D:\2 - PROGRAMMING\Prototype\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
+=======
+D:\WORK\Prototype\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
+D:\WORK\Prototype\Common\bin\Debug\Common.dll.config
+>>>>>>> origin/master

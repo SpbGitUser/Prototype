@@ -49,7 +49,7 @@ namespace ConsoleApp.StaticTests
                 //GenricsTest();
                 //TryCatchTest();
                 //TryCatchTest1();
-                TryCatchTest2();
+                //TryCatchTest2();
                 //InterfacesTest();
                 //InterfacesTest1();
                 //InterfacesTest2();
@@ -131,7 +131,7 @@ namespace ConsoleApp.StaticTests
                 //ParallelForTest();
                 //CancellationTokenTest();
                 //ParallelCancellationTokenTest();
-                //AsyncTest();
+                AsyncTest();
                 //AsyncConsistentTest();
                 //AsyncParralelTest();
                 //ConfigurationManagerTest();
@@ -904,7 +904,7 @@ namespace ConsoleApp.StaticTests
 
         private static void AsyncTest()
         {
-            FactorialAsyncVoid(14);   // вызов асинхронного метода
+            FactorialAsyncVoid(7);   // вызов асинхронного метода
             Console.WriteLine("Введите число: ");
             int n = Int32.Parse(Console.ReadLine());
             Console.WriteLine($"Квадрат числа равен {n * n}");
